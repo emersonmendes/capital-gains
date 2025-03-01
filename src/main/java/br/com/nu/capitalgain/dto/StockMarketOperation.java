@@ -1,6 +1,6 @@
-package br.com.emersonmendes.capitalgain.dto;
+package br.com.nu.capitalgain.dto;
 
-import br.com.emersonmendes.capitalgain.dto.enumeration.Operation;
+import br.com.nu.capitalgain.dto.enumeration.Operation;
 
 import java.math.BigDecimal;
 import java.util.Objects;

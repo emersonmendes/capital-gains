@@ -1,4 +1,4 @@
-package br.com.emersonmendes.capitalgain.dto;
+package br.com.nu.capitalgain.dto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

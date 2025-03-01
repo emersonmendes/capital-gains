@@ -1,4 +1,4 @@
-package br.com.emersonmendes;
+package br.com.nu;
 
 public class CapitalGainApplication {
 

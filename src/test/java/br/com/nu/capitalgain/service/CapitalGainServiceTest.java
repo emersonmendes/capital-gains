@@ -1,9 +1,9 @@
-package br.com.emersonmendes.capitalgain.service;
+package br.com.nu.capitalgain.service;
 
 
-import br.com.emersonmendes.capitalgain.config.ConfigLoader;
-import br.com.emersonmendes.capitalgain.dto.OperationTax;
-import br.com.emersonmendes.capitalgain.dto.StockMarketOperation;
+import br.com.nu.capitalgain.config.ConfigLoader;
+import br.com.nu.capitalgain.dto.OperationTax;
+import br.com.nu.capitalgain.dto.StockMarketOperation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -13,8 +13,8 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static br.com.emersonmendes.capitalgain.dto.enumeration.Operation.BUY;
-import static br.com.emersonmendes.capitalgain.dto.enumeration.Operation.SELL;
+import static br.com.nu.capitalgain.dto.enumeration.Operation.BUY;
+import static br.com.nu.capitalgain.dto.enumeration.Operation.SELL;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

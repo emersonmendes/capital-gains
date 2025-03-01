@@ -1,4 +1,4 @@
-package br.com.emersonmendes.capitalgain.dto.enumeration;
+package br.com.nu.capitalgain.dto.enumeration;
 
 public enum Operation {
 

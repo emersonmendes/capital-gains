@@ -1,4 +1,4 @@
-package br.com.emersonmendes.capitalgain.config;
+package br.com.nu.capitalgain.config;
 
 import java.math.BigDecimal;
 import java.util.ResourceBundle;
