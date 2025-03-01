@@ -30,6 +30,7 @@ public class StockOperationServiceTest {
         when(configMock.getBigDecimalProp(eq("tax.paid.percentage"))).thenReturn(BigDecimal.valueOf(20));
     }
 
+    // TODO: colocar tudo nesse padrão de testes
     @Test // Caso #1
     public void shouldNotPayTaxesForSellOperationsBelowThreshold() throws JsonProcessingException {
 
@@ -56,9 +57,13 @@ public class StockOperationServiceTest {
 
         // Assert
         Assertions.assertThat(taxes).hasSize(3);
-        Assertions.assertThat(taxes.get(0).tax()).isEqualTo(OperationTax.ofZero().tax());
-        Assertions.assertThat(taxes.get(1).tax()).isEqualTo(OperationTax.ofZero().tax());
-        Assertions.assertThat(taxes.get(2).tax()).isEqualTo(OperationTax.ofZero().tax());
+        Assertions.assertThat(taxes)
+            .extracting(OperationTax::tax)
+            .containsExactly(
+                OperationTax.ofZero().tax(),
+                OperationTax.ofZero().tax(),
+                OperationTax.ofZero().tax()
+            );
 
     }
 
