@@ -31,18 +31,34 @@ public class StockOperationServiceTest {
     }
 
     @Test // Caso #1
-    public void shouldNotPayTaxesWhenTotalOperationLessThan20000Reais() throws JsonProcessingException {
+    public void shouldNotPayTaxesForSellOperationsBelowThreshold() throws JsonProcessingException {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
-            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),
-            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(100),
-            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(15.00)).quantity(100)
-        ));
+        StockOperation buyOperation = StockOperation
+            .operation(BUY)
+            .unitCost(BigDecimal.valueOf(10.00))
+            .quantity(100);
 
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo("""
-        [{"tax":0.00},{"tax":0.00},{"tax":0.00}]""");
+        StockOperation sellOperation1 = StockOperation
+            .operation(SELL)
+            .unitCost(BigDecimal.valueOf(15.00))
+            .quantity(100);
+
+        StockOperation sellOperation2 = StockOperation
+            .operation(BUY)
+            .unitCost(BigDecimal.valueOf(15.00))
+            .quantity(100);
+
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(List.of(buyOperation, sellOperation1, sellOperation2));
+
+        // Assert
+        Assertions.assertThat(taxes).hasSize(3);
+        Assertions.assertThat(taxes.get(0).tax()).isEqualTo(OperationTax.ofZero().tax());
+        Assertions.assertThat(taxes.get(1).tax()).isEqualTo(OperationTax.ofZero().tax());
+        Assertions.assertThat(taxes.get(2).tax()).isEqualTo(OperationTax.ofZero().tax());
 
     }
 
