@@ -1,8 +1,10 @@
 package br.com.nu.capitalgain.dto.enumeration;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum OperationType {
 
-    BUY("BUY"),
+    BUY("buy"),
     SELL("sell");
 
     private final String key;
@@ -13,6 +15,16 @@ public enum OperationType {
 
     public String getKey() {
         return key;
+    }
+
+    @JsonCreator
+    public static OperationType fromString(String value) {
+        for (OperationType type : OperationType.values()) {
+            if (type.key.equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid operation type: " + value);
     }
 
 }
