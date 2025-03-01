@@ -20,7 +20,7 @@ public class StockOperationContext {
         return currentWap;
     }
 
-    public void setCurrentWap(BigDecimal currentWap) {
+    public void updateCurrentWap(BigDecimal currentWap) {
         this.currentWap = currentWap;
     }
 

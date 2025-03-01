@@ -19,7 +19,7 @@ public class BuyStockOperationProcessor implements StockOperationProcessor{
             .add(stocks.multiply(operation.unitCost()))
             .divide(currentStocks.add(stocks), UP);
 
-        context.setCurrentWap(wap);
+        context.updateCurrentWap(wap);
 
         return OperationTax.ofZero();
 
