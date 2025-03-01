@@ -27,6 +27,7 @@ public class CapitalGainServiceTest {
     public void setUp(){
         configMock = mock(ConfigLoader.class);
         when(configMock.getBigDecimalProp(eq("tax.exempt.amount.max"))).thenReturn(BigDecimal.valueOf(20000));
+        when(configMock.getBigDecimalProp(eq("tax.paid.percentage"))).thenReturn(BigDecimal.valueOf(20));
     }
 
     @Test // Caso #1
@@ -166,7 +167,7 @@ public class CapitalGainServiceTest {
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(2)).quantity(5000),
+            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(2.00)).quantity(5000),
             StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
             StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
             StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000),
@@ -175,7 +176,6 @@ public class CapitalGainServiceTest {
             StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(4350),
             StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(650)
         ));
-
 
         //todo: DEVE PODER ACEITAR JSON COM ESPAÇOS TBM
         String result = """

@@ -8,36 +8,30 @@ import br.com.emersonmendes.capitalgain.dto.enumeration.Operation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static java.math.RoundingMode.HALF_UP;
+import static java.math.RoundingMode.UP;
 
 public class CapitalGainService {
 
-    private final ConfigLoader config;
+    private final BigDecimal taxExemptAmountMax;
+    private final BigDecimal taxPaidPercentage;
 
     public CapitalGainService(ConfigLoader config) {
-        this.config = config;
+        taxExemptAmountMax = config.getBigDecimalProp("tax.exempt.amount.max");
+        taxPaidPercentage = config.getBigDecimalProp("tax.paid.percentage");
     }
-
 
     public List<OperationTax> calculate(List<StockMarketOperation> operations) {
 
         final StockMarketOperation firstOperation = operations.getFirst();
-        // Weighted Average Price
-        BigDecimal currentWap = firstOperation.unitCost();
 
+        BigDecimal currentWap = firstOperation.unitCost();
         BigDecimal currentStocks = BigDecimal.valueOf(firstOperation.quantity());
 
         final List<OperationTax> taxes = new ArrayList<>();
-        final List<BigDecimal> losses = new ArrayList<>();
-
-        // TODO: index só pra teste
-        int index = 0;
+        BigDecimal loss = BigDecimal.ZERO;
 
         for (StockMarketOperation stockMarketOperation : operations) {
-            index++;
-
             BigDecimal stocks = BigDecimal.valueOf(stockMarketOperation.quantity());
             BigDecimal unitCost = stockMarketOperation.unitCost();
 
@@ -47,7 +41,7 @@ public class CapitalGainService {
             if(operation.equals(Operation.BUY)){
                 currentWap = currentStocks.multiply(currentWap)
                     .add(totalCost)
-                    .divide(currentStocks.add(stocks), HALF_UP); // pq HALF_UP ?????
+                    .divide(currentStocks.add(stocks), UP);
                 taxes.add(OperationTax.ofZero());
             } else {
 
@@ -55,25 +49,18 @@ public class CapitalGainService {
 
                 BigDecimal profit = totalCost.subtract(currentWap.multiply(stocks));
 
-                // todo: tem mais de 1 loss???
-                for (BigDecimal loss : losses) {
-                    profit = profit.subtract(loss);
-                }
-
-                losses.clear();
+                profit = profit.subtract(loss);
+                loss = BigDecimal.ZERO;
 
                 if(isNegative(profit)){
-                    losses.add(profit.negate());
+                    loss = profit.negate();
                     profit = BigDecimal.ZERO;
                 }
 
                 // TODO: MELHORAR TEM TAX
                 if(hasTax(stocks, unitCost, currentWap)){
 
-                    final BigDecimal percentTax = BigDecimal.valueOf(20);
-
-                    System.out.println(index);
-                    final OperationTax operationTax = OperationTax.of(profit.multiply(percentTax).divide(BigDecimal.valueOf(100), HALF_UP));
+                    final OperationTax operationTax = OperationTax.of(profit.multiply(taxPaidPercentage).divide(BigDecimal.valueOf(100), 2 , UP));
                     taxes.add(operationTax);
 
                 } else {
@@ -95,7 +82,6 @@ public class CapitalGainService {
     private boolean hasTax(BigDecimal stocks, BigDecimal unitCost, BigDecimal currentWap) {
 
         // TODO: VERIFICAR MELHOR NOME
-        BigDecimal taxExemptAmountMax = this.config.getBigDecimalProp("tax.exempt.amount.max");
         if(taxExemptAmountMax.compareTo(stocks.multiply(unitCost)) >= 0){
             return false;
         }
