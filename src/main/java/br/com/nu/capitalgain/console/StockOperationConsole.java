@@ -2,14 +2,17 @@ package br.com.nu.capitalgain.console;
 
 import br.com.nu.capitalgain.dto.StockOperation;
 import br.com.nu.capitalgain.service.StockOperationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,51 +30,45 @@ public class StockOperationConsole {
     }
 
     public String start(String... args) {
-        try {
-            if(args.length > 0) {
-                return processArgs(args);
-            } else {
-                return processStdin();
-            }
-        } catch (Exception e) {
-            // TODO: CRIAR EXCEPTION????
-            throw new RuntimeException("Could not parse JSON", e);
+        if(args.length > 0) {
+            return processArgs(args);
+        } else {
+            return processStdin();
         }
     }
 
     private String processArgs(String[] args) {
-        return processLines(Stream.of(args));
+        return processLines(args);
     }
 
     private String processStdin() {
-
         InputStream inputStream = System.in;
         try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8)) {
-            String input = scanner.useDelimiter("\\A").next();
-            Stream<String> linesStream = Arrays.stream(input.split("(?<=])\\s*(?=\\[)", -1));
-            return processLines(linesStream);
-
-        } catch (Exception e) {
-            // TODO: CRIAR EXCEPTION????
-            throw new RuntimeException("Could do something", e);
+            String input = scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "";
+            String[] lines = input.split("(?<=])\\s*(?=\\[)", -1);
+            return processLines(lines);
         }
     }
 
-    private String processLines(Stream<String> stream) {
-        return stream
-            .parallel()
-            .map(this::calculate)
-            .collect(Collectors.joining("\n"));
+    private String processLines(String[] lines) {
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
+            List<CompletableFuture<String>> futures = Stream.of(lines)
+                .map(line -> CompletableFuture.supplyAsync(() -> calculate(line), executor))
+                .toList();
+            return futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.joining("\n"));
+        }
     }
 
     private String calculate(String jsonInput) {
         try {
-            List<StockOperation> operations = objectMapper.readValue(jsonInput, new TypeReference<>() {});
+            List<StockOperation> operations  = objectMapper.readValue(jsonInput, new TypeReference<>() {});
             var taxes = stockOperationService.calculate(operations);
             return objectMapper.writeValueAsString(taxes);
-        } catch (Exception e) {
-            // TODO: CRIAR EXCEPTION????
-            throw new RuntimeException("Could not parse JSON", e);
+        } catch (JsonProcessingException e) {
+            //TODO: improve Exception feedback
+            throw new RuntimeException("Could not process json", e);
         }
     }
 

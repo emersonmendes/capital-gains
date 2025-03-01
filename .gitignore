@@ -12,6 +12,7 @@ target/
 *.iml
 *.ipr
 **/.idea/**
+input.json
 
 ### Eclipse ###
 .apt_generated

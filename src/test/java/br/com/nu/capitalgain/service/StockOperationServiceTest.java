@@ -89,9 +89,9 @@ public class StockOperationServiceTest {
         var stockOperationService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = stockOperationService.calculate(List.of(
-                StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-                StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
-                StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
         ));
 
         String result = """

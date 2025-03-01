@@ -8,11 +8,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CapitalGainApplication {
 
     public static void main(String[] args) {
+
+        long startDateTime = System.currentTimeMillis();
+
         final var config = new ConfigLoader("config");
         final var stockOperationService = new StockOperationService(config);
         final var stockOperationConsole = new StockOperationConsole(stockOperationService, new ObjectMapper());
         String stdout = stockOperationConsole.start(args);
         System.out.println(stdout);
+
+        long endDateTime = System.currentTimeMillis();
+        System.out.println("Time taken in milliseconds : " + (endDateTime-startDateTime));
+
     }
 
 }

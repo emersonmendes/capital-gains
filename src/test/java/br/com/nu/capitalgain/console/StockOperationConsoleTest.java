@@ -12,7 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class StockOperationConsoleTest {
 
@@ -20,12 +21,11 @@ public class StockOperationConsoleTest {
     public void shouldProcessMultiLinesViaArguments() {
 
         var stockOperationServiceMock =  mock(StockOperationService.class);
+        var stockOperationConsole = new StockOperationConsole(stockOperationServiceMock, new ObjectMapper());
 
         when(stockOperationServiceMock.calculate(anyList())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
-
-        var stockOperationConsole = new StockOperationConsole(stockOperationServiceMock, new ObjectMapper());
 
         String line1 = """
             [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},
@@ -37,7 +37,7 @@ public class StockOperationConsoleTest {
             {"operation":"sell", "unit-cost":10.00, "quantity": 5000}]
         """;
 
-        String stdout = stockOperationConsole.start(new String[]{line1, line2});
+        String stdout = stockOperationConsole.start(line1, line2);
 
         String result = """
         [{"tax":0.00},{"tax":10000.00}]
@@ -74,8 +74,5 @@ public class StockOperationConsoleTest {
         Assertions.assertThat(stdout).isEqualTo(result);
 
     }
-
-
-    // TODO: TESTAR EXCEPTIONS
 
 }
