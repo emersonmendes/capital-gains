@@ -1,16 +1,17 @@
 package br.com.nu.capitalgain.console;
 
-import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.StockOperation;
 import br.com.nu.capitalgain.service.StockOperationService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StockOperationConsole {
 
@@ -25,27 +26,50 @@ public class StockOperationConsole {
         this.objectMapper = objectMapper;
     }
 
-    public String start(String[] args) {
+    public String start(String... args) {
         try {
-
-            String jsonInput;
-
             if(args.length > 0) {
-                jsonInput = args[0];
+                return processArgs(args);
             } else {
-
-                InputStream inputStream = System.in;
-                Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
-                jsonInput = scanner.useDelimiter("\\A").next();
-                scanner.close();
+                return processStdin();
             }
+        } catch (Exception e) {
+            // TODO: CRIAR EXCEPTION????
+            throw new RuntimeException("Could not parse JSON", e);
+        }
+    }
 
+    private String processArgs(String[] args) {
+        return processLines(Stream.of(args));
+    }
 
+    private String processStdin() {
+
+        InputStream inputStream = System.in;
+        try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8)) {
+            String input = scanner.useDelimiter("\\A").next();
+            Stream<String> linesStream = Arrays.stream(input.split("(?<=])\\s*(?=\\[)", -1));
+            return processLines(linesStream);
+
+        } catch (Exception e) {
+            // TODO: CRIAR EXCEPTION????
+            throw new RuntimeException("Could do something", e);
+        }
+    }
+
+    private String processLines(Stream<String> stream) {
+        return stream
+            .parallel()
+            .map(this::calculate)
+            .collect(Collectors.joining("\n"));
+    }
+
+    private String calculate(String jsonInput) {
+        try {
             List<StockOperation> operations = objectMapper.readValue(jsonInput, new TypeReference<>() {});
             var taxes = stockOperationService.calculate(operations);
             return objectMapper.writeValueAsString(taxes);
-
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             // TODO: CRIAR EXCEPTION????
             throw new RuntimeException("Could not parse JSON", e);
         }
