@@ -3,7 +3,7 @@ package br.com.nu.capitalgain.service;
 
 import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
-import br.com.nu.capitalgain.dto.StockMarketOperation;
+import br.com.nu.capitalgain.dto.StockOperation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -13,8 +13,8 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static br.com.nu.capitalgain.dto.enumeration.Operation.BUY;
-import static br.com.nu.capitalgain.dto.enumeration.Operation.SELL;
+import static br.com.nu.capitalgain.dto.enumeration.OperationType.BUY;
+import static br.com.nu.capitalgain.dto.enumeration.OperationType.SELL;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,9 +36,9 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(100),
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(15.00)).quantity(100)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(100),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(15.00)).quantity(100)
         ));
 
         Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo("""
@@ -52,9 +52,9 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(5000),
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(5.00)).quantity(5000)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(5000),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(5.00)).quantity(5000)
         ));
 
         Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo("""
@@ -70,9 +70,9 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(5.00)).quantity(5000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(3000)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(5.00)).quantity(5000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(3000)
         ));
 
         String result = """
@@ -88,9 +88,9 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-                StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-                StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
-                StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
+                StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+                StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
+                StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
         ));
 
         String result = """
@@ -106,10 +106,10 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
         ));
 
         String result = """
@@ -125,10 +125,10 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
         ));
 
         String result = """
@@ -145,11 +145,11 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(2)).quantity(5000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(2)).quantity(5000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000)
         ));
 
         String result = """
@@ -166,15 +166,15 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(2.00)).quantity(5000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000),
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(5000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(4350),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(650)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(2.00)).quantity(5000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(5000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(4350),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(650)
         ));
 
         //todo: DEVE PODER ACEITAR JSON COM ESPAÇOS TBM
@@ -192,10 +192,10 @@ public class CapitalGainServiceTest {
         var capitalGainService = new CapitalGainService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000),
-            StockMarketOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10000),
-            StockMarketOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000)
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10000),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000)
         ));
 
         //todo: DEVE PODER ACEITAR JSON COM ESPAÇOS TBM

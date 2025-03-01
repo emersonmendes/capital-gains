@@ -1,23 +1,23 @@
 package br.com.nu.capitalgain.dto;
 
-import br.com.nu.capitalgain.dto.enumeration.Operation;
+import br.com.nu.capitalgain.dto.enumeration.OperationType;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public record StockMarketOperation(
-    Operation operation,
+public record StockOperation(
+    OperationType type,
     BigDecimal unitCost,
     long quantity
 ) {
 
-    public StockMarketOperation {
-        Objects.requireNonNull(operation, "Operation is required!");
+    public StockOperation {
+        Objects.requireNonNull(type, "Operation type is required!");
         Objects.requireNonNull(unitCost, "Unit cost is required!");
     }
 
-    public static OperationStep operation(Operation operation) {
-        return new Builder(operation);
+    public static OperationStep operation(OperationType type) {
+        return new Builder(type);
     }
 
     public interface OperationStep {
@@ -25,18 +25,17 @@ public record StockMarketOperation(
     }
 
     public interface UnitCostStep {
-        StockMarketOperation quantity(long quantity);
+        StockOperation quantity(long quantity);
     }
-
 
     private static class Builder implements OperationStep, UnitCostStep {
 
-        private final Operation operation;
+        private final OperationType type;
         private BigDecimal unitCost;
         private long quantity;
 
-        public Builder(Operation operation) {
-            this.operation = operation;
+        public Builder(OperationType type) {
+            this.type = type;
         }
 
         @Override
@@ -46,10 +45,10 @@ public record StockMarketOperation(
         }
 
         @Override
-        public StockMarketOperation quantity(long quantity) {
+        public StockOperation quantity(long quantity) {
             this.quantity = quantity;
-            return new StockMarketOperation(
-                this.operation,
+            return new StockOperation(
+                this.type,
                 this.unitCost,
                 this.quantity
             );

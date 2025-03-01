@@ -1,13 +1,13 @@
 package br.com.nu.capitalgain.dto.enumeration;
 
-public enum Operation {
+public enum OperationType {
 
     BUY("BUY"),
     SELL("sell");
 
     private final String key;
 
-    Operation(String key) {
+    OperationType(String key) {
         this.key = key;
     }
 
