@@ -4,10 +4,8 @@ import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.StockOperation;
 import br.com.nu.capitalgain.processor.StockOperationContext;
-import br.com.nu.capitalgain.processor.StockOperationProcessor;
 import br.com.nu.capitalgain.processor.StockOperationProcessorFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StockOperationService {
@@ -19,17 +17,11 @@ public class StockOperationService {
     }
 
     public List<OperationTax> calculate(List<StockOperation> operations) {
-
         final StockOperationContext context = new StockOperationContext(operations.getFirst());
-        final List<OperationTax> taxes = new ArrayList<>();
-
-        for (StockOperation operation : operations) {
-            StockOperationProcessor processor = stockOperationProcessorFactory.getInstance(operation.type());
-            taxes.add(processor.proccess(operation, context));
-        }
-
-        return taxes;
-
+        return operations.stream()
+            .map(operation -> stockOperationProcessorFactory.getInstance(operation.type())
+            .proccess(operation, context))
+            .toList();
     }
 
 }
