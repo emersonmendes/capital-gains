@@ -10,11 +10,11 @@ import br.com.nu.capitalgain.processor.StockOperationProcessorFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CapitalGainService {
+public class StockOperationService {
 
     private final StockOperationProcessorFactory stockOperationProcessorFactory;
 
-    public CapitalGainService(ConfigLoader config) {
+    public StockOperationService(ConfigLoader config) {
         stockOperationProcessorFactory = new StockOperationProcessorFactory(config);
     }
 

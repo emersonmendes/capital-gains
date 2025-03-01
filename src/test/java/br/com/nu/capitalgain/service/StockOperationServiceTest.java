@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CapitalGainServiceTest {
+public class StockOperationServiceTest {
 
     private ConfigLoader configMock;
 
@@ -33,7 +33,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #1
     public void shouldNotPayTaxesWhenTotalOperationLessThan20000Reais() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),
@@ -49,7 +49,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #2
     public void shouldPayTaxesWhenSellingPriceIsGreaterThanWAP() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -57,8 +57,11 @@ public class CapitalGainServiceTest {
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(5.00)).quantity(5000)
         ));
 
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo("""
-        [{"tax":0.00},{"tax":10000.00},{"tax":0.00}]""");
+        String result = """
+            [{"tax":0.00},{"tax":10000.00},{"tax":0.00}]
+        """.trim();
+
+        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
 
     }
 
@@ -67,7 +70,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #3
     public void shouldPayTaxesAndDeductTheLoss() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -85,7 +88,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #4
     public void shouldOperateWithNoLossAndNoProfit() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
                 StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -103,7 +106,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #5
     public void shouldOperateWithNoLossAndNoProfitxx() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -122,7 +125,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #5
     public void shouldPayTaxAfterGetProfitAndAfterNoLossAndNoProfit() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -142,7 +145,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #6 // TODO: UM NOME MELHOR
     public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -163,7 +166,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #7
     public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE2() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -189,7 +192,7 @@ public class CapitalGainServiceTest {
     @Test // Caso #8
     public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE3() throws JsonProcessingException {
 
-        var capitalGainService = new CapitalGainService(configMock);
+        var capitalGainService = new StockOperationService(configMock);
 
         List<OperationTax> taxes = capitalGainService.calculate(List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
