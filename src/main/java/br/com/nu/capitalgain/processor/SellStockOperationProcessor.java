@@ -26,7 +26,7 @@ public class SellStockOperationProcessor implements StockOperationProcessor {
 
         final BigDecimal totalCost = sharesTraded.multiply(operation.unitCost());
 
-        context.setCurrentStocks(context.getCurrentStocks().subtract(sharesTraded));
+        context.updateCurrentStocks(context.getCurrentStocks().subtract(sharesTraded));
 
         BigDecimal profit = totalCost
             .subtract(currentWap.multiply(sharesTraded))
@@ -35,19 +35,19 @@ public class SellStockOperationProcessor implements StockOperationProcessor {
         context.clearLoss();
 
         if(isNegative(profit)){
-            context.setLoss(profit.negate());
+            context.updateLoss(profit.negate());
             profit = BigDecimal.ZERO;
         }
 
         if(hasTax(operation, currentWap)){
-            return calcTax(profit);
+            return calculateTax(profit);
         }
 
         return OperationTax.ofZero();
 
     }
 
-    private OperationTax calcTax(BigDecimal profit) {
+    private OperationTax calculateTax(BigDecimal profit) {
         BigDecimal tax = profit.multiply(taxPaidPercentage).divide(BigDecimal.valueOf(100), 2, UP);
         return OperationTax.of(tax);
     }

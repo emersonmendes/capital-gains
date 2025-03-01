@@ -28,7 +28,7 @@ public class StockOperationContext {
         return currentStocks;
     }
 
-    public void setCurrentStocks(BigDecimal currentStocks) {
+    public void updateCurrentStocks(BigDecimal currentStocks) {
         this.currentStocks = currentStocks;
     }
 
@@ -36,12 +36,12 @@ public class StockOperationContext {
         return loss;
     }
 
-    public void setLoss(BigDecimal loss) {
+    public void updateLoss(BigDecimal loss) {
         this.loss = loss;
     }
 
     public void clearLoss() {
-        setLoss(BigDecimal.ZERO);
+        updateLoss(BigDecimal.ZERO);
     }
 
 }
