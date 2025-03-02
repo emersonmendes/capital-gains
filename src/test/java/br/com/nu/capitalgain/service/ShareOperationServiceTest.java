@@ -84,7 +84,7 @@ public class ShareOperationServiceTest {
     }
 
     @Test // Caso #3
-    public void shouldPayTaxesAndDeductTheLoss() {
+    public void shouldApplyTaxesAfterDeductingAccumulatedLoss() {
 
         // Arrange
         var shareOperationService = new ShareOperationService(configMock);
@@ -111,7 +111,7 @@ public class ShareOperationServiceTest {
     }
 
     @Test // Caso #4
-    public void shouldOperateWithNoLossAndNoProfit() {
+    public void shouldProcessOperationWithNoNetLossOrCapitalGain() {
 
         // Arrange
         var shareOperationService = new ShareOperationService(configMock);
@@ -138,7 +138,7 @@ public class ShareOperationServiceTest {
     }
 
     @Test // Caso #5
-    public void shouldPayTaxAfterGetProfitAndAfterNoLossAndNoProfit() {
+    public void shouldPayTaxOnlyAfterCapitalGainWhenNoLossOrPreviousGainRemains() {
 
         // Arrange
         var shareOperationService = new ShareOperationService(configMock);
@@ -166,15 +166,15 @@ public class ShareOperationServiceTest {
 
     }
 
-    @Test // Caso #6 // TODO: UM NOME MELHOR
-    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE() {
+    @Test // Caso #6
+    public void shouldValidateCase6() {
 
         // Arrange
         var shareOperationService = new ShareOperationService(configMock);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(2)).quantity(5000),
+            ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(2.00)).quantity(5000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000)
@@ -197,7 +197,7 @@ public class ShareOperationServiceTest {
     }
 
     @Test // Caso #7
-    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE2() {
+    public void shouldValidateCase7() {
 
         // Arrange
         var shareOperationService = new ShareOperationService(configMock);
@@ -235,7 +235,7 @@ public class ShareOperationServiceTest {
     }
 
     @Test // Caso #8
-    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE3() {
+    public void shouldValidateCase8() {
 
         // Arrange
         var shareOperationService = new ShareOperationService(configMock);
@@ -307,6 +307,28 @@ public class ShareOperationServiceTest {
 
         // Assert
         Assertions.assertThat(context.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(15.0));
+
+    }
+
+    @Test
+    public void shouldOffsetAccumulatedLossAgainstMultipleFutureCapitalGainsUntilFullyDeducted() {
+
+        // Arrange
+        var shareOperationService = new ShareOperationService(configMock);
+        List<ShareOperation> operations = List.of(
+            ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
+            ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(05.00)).quantity(5000),
+            ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(1500),
+            ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(1000)
+        );
+
+        var context = new ShareOperationContext(operations.getFirst());
+
+        // Act
+        shareOperationService.calculate(operations, context);
+
+        // Assert
+        Assertions.assertThat(context.getLoss()).isEqualTo(BigDecimal.ZERO);
 
     }
 
