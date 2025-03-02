@@ -1,6 +1,5 @@
 package br.com.nu.capitalgain.dto;
 
-import br.com.nu.capitalgain.dto.enumeration.OperationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;

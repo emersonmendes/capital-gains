@@ -39,7 +39,7 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
             capitalGain = BigDecimal.ZERO;
         }
 
-        if(isTaxableSale(operation, weightedAvgCost)){
+        if(isTaxable(operation, weightedAvgCost)){
             return applyTax(capitalGain);
         }
 
@@ -56,7 +56,7 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
         return value.signum() < 0;
     }
 
-    private boolean isTaxableSale(ShareOperation operation, BigDecimal weightedAvgCost) {
+    private boolean isTaxable(ShareOperation operation, BigDecimal weightedAvgCost) {
 
         BigDecimal unitCost = operation.unitCost();
         BigDecimal newShares = BigDecimal.valueOf(operation.quantity());

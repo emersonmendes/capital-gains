@@ -1,7 +1,7 @@
 package br.com.nu.capitalgain.processor;
 
 import br.com.nu.capitalgain.config.ConfigLoader;
-import br.com.nu.capitalgain.dto.enumeration.OperationType;
+import br.com.nu.capitalgain.dto.OperationType;
 
 import java.util.HashMap;
 import java.util.Map;

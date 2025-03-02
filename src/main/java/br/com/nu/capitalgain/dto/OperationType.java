@@ -1,4 +1,4 @@
-package br.com.nu.capitalgain.dto.enumeration;
+package br.com.nu.capitalgain.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

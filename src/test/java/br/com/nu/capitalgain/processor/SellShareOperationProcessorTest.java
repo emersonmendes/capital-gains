@@ -3,7 +3,7 @@ package br.com.nu.capitalgain.processor;
 import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.ShareOperation;
-import br.com.nu.capitalgain.dto.enumeration.OperationType;
+import br.com.nu.capitalgain.dto.OperationType;
 import org.assertj.core.api.Assertions;
 
 import org.junit.jupiter.api.Test;

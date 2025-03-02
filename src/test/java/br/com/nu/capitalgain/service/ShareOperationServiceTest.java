@@ -12,8 +12,8 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static br.com.nu.capitalgain.dto.enumeration.OperationType.BUY;
-import static br.com.nu.capitalgain.dto.enumeration.OperationType.SELL;
+import static br.com.nu.capitalgain.dto.OperationType.BUY;
+import static br.com.nu.capitalgain.dto.OperationType.SELL;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
