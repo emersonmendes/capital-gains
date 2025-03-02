@@ -2,9 +2,14 @@
 
 ## Sobre as decisões técnicas
   
-- Utilizando Java
-  - Linguagem no qual eu tenho mais dominio
-- 
+- Utilização de Java (21)
+  - Escolhido por ser a linguagem na qual tenho mais experiência.
+  - Benefícios da versão 21: suporte a Virtual Threads, melhorias de desempenho e maior maturidade da linguagem.
+- Uso do Java Streams API para manipulação eficiente de dados.
+- Implementação de princípios SOLID para melhor organização e manutenção do código.
+- Uso de containers Docker
+  - Facilita a execução do projeto sem necessidade de configurações adicionais na máquina.
+  - Permite isolamento do ambiente e consistência entre execuções.
 
 ## Sobre as bibliotecas utilizadas no projeto
 
@@ -22,30 +27,28 @@
 
 ## Como executar o projeto
 
-#### 1 - Fazer o build
+### 1 - Fazer o build
 ``` shell
     docker compose run --rm capital-gains-maven mvn clean install
 ```
 
-#### 2 - Executar
-``` shell
-    
-    # Exemplo 1:
-    
+### 2 - Executar
+
+#### Exemplo 1: Passando operações inline
+``` shell  
     docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar \
     '[{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]' \
     '[{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]'
-    
-    # Exemplo 2:
-    
+```  
+#### Exemplo 2: Passando operações inline com múltiplas linhas
+``` shell  
     docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar \
     '[{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]
     [{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]'
-    
-    # Exemplo 3:
-    
-    docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar < sample/operations.json
-        
+``` 
+#### Exemplo 3: Passando operações via arquivo JSON
+``` shell  
+    docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar < sample/operations.json        
 ```
 
 ## Como executar os testes
