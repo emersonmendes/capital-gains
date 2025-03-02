@@ -18,7 +18,7 @@ public record OperationTax(BigDecimal tax) {
     }
 
     private static BigDecimal applyPattern(BigDecimal tax) {
-        return tax.setScale(2, RoundingMode.UNNECESSARY);
+        return tax.setScale(2, RoundingMode.UP);
     }
 
 }

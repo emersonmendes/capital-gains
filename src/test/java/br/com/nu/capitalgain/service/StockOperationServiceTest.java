@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static br.com.nu.capitalgain.dto.enumeration.OperationType.BUY;
@@ -30,164 +31,169 @@ public class StockOperationServiceTest {
         when(configMock.getBigDecimalProp(eq("tax.paid.percentage"))).thenReturn(BigDecimal.valueOf(20));
     }
 
-    // TODO: colocar tudo nesse padrão de testes
     @Test // Caso #1
-    public void shouldNotPayTaxesForSellOperationsBelowThreshold() throws JsonProcessingException {
+    public void shouldNotPayTaxesForSellOperationsBelowThreshold() {
 
         // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        StockOperation buyOperation = StockOperation
-            .operation(BUY)
-            .unitCost(BigDecimal.valueOf(10.00))
-            .quantity(100);
-
-        StockOperation sellOperation1 = StockOperation
-            .operation(SELL)
-            .unitCost(BigDecimal.valueOf(15.00))
-            .quantity(100);
-
-        StockOperation sellOperation2 = StockOperation
-            .operation(BUY)
-            .unitCost(BigDecimal.valueOf(15.00))
-            .quantity(100);
+        List<StockOperation> operations = List.of(
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),
+            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(100),
+            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(15.00)).quantity(100)
+        );
 
         // Act
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(buyOperation, sellOperation1, sellOperation2));
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSize(3);
-        Assertions.assertThat(taxes)
-            .extracting(OperationTax::tax)
-            .containsExactly(
-                OperationTax.ofZero().tax(),
-                OperationTax.ofZero().tax(),
-                OperationTax.ofZero().tax()
-            );
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO)
+        );
 
     }
 
     @Test // Caso #2
-    public void shouldPayTaxesWhenSellingPriceIsGreaterThanWAP() throws JsonProcessingException {
+    public void shouldPayTaxesWhenSellingPriceIsGreaterThanWAP() {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
+        List<StockOperation> operations = List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(5000),
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(5.00)).quantity(5000)
-        ));
+        );
 
-        String result = """
-            [{"tax":0.00},{"tax":10000.00},{"tax":0.00}]
-        """.trim();
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
 
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
+        // Assert
+        Assertions.assertThat(taxes).hasSize(3);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(10_000.00)),
+            OperationTax.of(BigDecimal.ZERO)
+        );
 
     }
 
     @Test // Caso #3
-    public void shouldPayTaxesAndDeductTheLoss() throws JsonProcessingException {
+    public void shouldPayTaxesAndDeductTheLoss() {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
+        List<StockOperation> operations = List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(5.00)).quantity(5000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(3000)
-        ));
+        );
 
-        String result = """
-            [{"tax":0.00},{"tax":0.00},{"tax":1000.00}]
-        """.trim();
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
+
+        // Assert
+        Assertions.assertThat(taxes).hasSize(3);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(1_000.00))
+        );
 
     }
 
     @Test // Caso #4
-    public void shouldOperateWithNoLossAndNoProfit() throws JsonProcessingException {
+    public void shouldOperateWithNoLossAndNoProfit() {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
+        List<StockOperation> operations = List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
-        ));
+        );
 
-        String result = """
-            [{"tax":0.00},{"tax":0.00},{"tax":0.00}]
-        """.trim();
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
 
-    }
-
-    @Test // Caso #5
-    public void shouldOperateWithNoLossAndNoProfitxx() throws JsonProcessingException {
-
-        var stockOperationService = new StockOperationService(configMock);
-
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
-            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
-            StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
-            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000),
-            StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
-        ));
-
-        String result = """
-            [{"tax":0.00},{"tax":0.00},{"tax":0.00},{"tax":10000.00}]
-        """.trim();
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
+        // Assert
+        Assertions.assertThat(taxes).hasSize(3);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO)
+        );
 
     }
 
     @Test // Caso #5
-    public void shouldPayTaxAfterGetProfitAndAfterNoLossAndNoProfit() throws JsonProcessingException {
+    public void shouldPayTaxAfterGetProfitAndAfterNoLossAndNoProfit() {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
+        List<StockOperation> operations = List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
-        ));
+        );
 
-        String result = """
-            [{"tax":0.00},{"tax":0.00},{"tax":0.00},{"tax":10000.00}]
-        """.trim();
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
 
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
+        // Assert
+        Assertions.assertThat(taxes).hasSize(4);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(10_000.00))
+        );
 
     }
 
     @Test // Caso #6 // TODO: UM NOME MELHOR
-    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE() throws JsonProcessingException {
+    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE() {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
+        List<StockOperation> operations = List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(2)).quantity(5000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000)
-        ));
+        );
 
-        String result = """
-            [{"tax":0.00},{"tax":0.00},{"tax":0.00},{"tax":0.00},{"tax":3000.00}]
-        """.trim();
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
 
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
+        // Assert
+        Assertions.assertThat(taxes).hasSize(5);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(3_000.00))
+        );
 
     }
 
     @Test // Caso #7
-    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE2() throws JsonProcessingException {
+    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE2() {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
+        List<StockOperation> operations = List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(2.00)).quantity(5000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
@@ -197,35 +203,50 @@ public class StockOperationServiceTest {
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(5000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(4350),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(650)
-        ));
+        );
 
-        //todo: DEVE PODER ACEITAR JSON COM ESPAÇOS TBM
-        String result = """
-            [{"tax":0.00},{"tax":0.00},{"tax":0.00},{"tax":0.00},{"tax":3000.00},{"tax":0.00},{"tax":0.00},{"tax":3700.00},{"tax":0.00}]
-        """.trim();
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
 
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
-
+        // Assert
+        Assertions.assertThat(taxes).hasSize(9);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(3_000.00)),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(3_700.00)),
+            OperationTax.of(BigDecimal.ZERO)
+        );
     }
 
     @Test // Caso #8
-    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE3() throws JsonProcessingException {
+    public void shouldDAR_UM_NOM_MELHOR_PRA_ESSE3() {
 
+        // Arrange
         var stockOperationService = new StockOperationService(configMock);
 
-        List<OperationTax> taxes = stockOperationService.calculate(List.of(
+        List<StockOperation> operations = List.of(
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000),
             StockOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10000),
             StockOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000)
-        ));
+        );
 
-        //todo: DEVE PODER ACEITAR JSON COM ESPAÇOS TBM
-        String result = """
-            [{"tax":0.00},{"tax":80000.00},{"tax":0.00},{"tax":60000.00}]
-        """.trim();
+        // Act
+        List<OperationTax> taxes = stockOperationService.calculate(operations);
 
-        Assertions.assertThat(new ObjectMapper().writeValueAsString(taxes)).isEqualTo(result);
+        // Assert
+        Assertions.assertThat(taxes).hasSize(4);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(8_0000.00)),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.valueOf(6_0000.00))
+        );
 
     }
 
