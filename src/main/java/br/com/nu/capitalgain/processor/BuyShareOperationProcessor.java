@@ -12,10 +12,10 @@ public class BuyShareOperationProcessor implements ShareOperationProcessor {
     @Override
     public OperationTax process(ShareOperation operation, ShareOperationContext context) {
 
-        BigDecimal totalShares = context.getTotalShares();
-        BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
+        var totalShares = context.getTotalShares();
+        var newShares = BigDecimal.valueOf(operation.quantity());
 
-        BigDecimal newWeightedAvgCost = totalShares
+        var newWeightedAvgCost = totalShares
             .multiply(context.getWeightedAvgCost())
             .add(newShares.multiply(operation.unitCost()))
             .divide(totalShares.add(newShares), UP);

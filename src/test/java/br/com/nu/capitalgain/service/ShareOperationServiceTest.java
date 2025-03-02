@@ -41,7 +41,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(this.shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(100),
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(15.00)).quantity(100)
@@ -50,7 +50,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -68,7 +68,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(5000),
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(5.00)).quantity(5000)
@@ -77,7 +77,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -95,7 +95,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(5.00)).quantity(5000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(3000)
@@ -104,7 +104,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -122,7 +122,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
@@ -131,7 +131,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -149,7 +149,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(25.00)).quantity(5000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000),
@@ -159,7 +159,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -178,7 +178,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(2.00)).quantity(5000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
@@ -189,7 +189,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
         Assertions.assertThat(taxes).containsExactly(
@@ -208,7 +208,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(2.00)).quantity(5000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(2000),
@@ -223,7 +223,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -246,7 +246,7 @@ public class ShareOperationServiceTest {
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000),
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10000),
@@ -256,7 +256,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -276,7 +276,7 @@ public class ShareOperationServiceTest {
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
 
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(100.00)).quantity(1000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(200.00)).quantity(1000)
         );
@@ -284,7 +284,7 @@ public class ShareOperationServiceTest {
         var context = new ShareOperationContext(operations.getFirst());
 
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
+        var taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -300,7 +300,7 @@ public class ShareOperationServiceTest {
 
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(5),
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(5)
@@ -321,7 +321,7 @@ public class ShareOperationServiceTest {
 
         // Arrange
         var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
-        List<ShareOperation> operations = List.of(
+        var operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(05.00)).quantity(5000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(1500),

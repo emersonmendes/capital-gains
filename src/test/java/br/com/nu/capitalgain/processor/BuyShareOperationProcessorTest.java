@@ -14,11 +14,11 @@ public class BuyShareOperationProcessorTest {
     public void shouldReturnZeroTaxWhenDoABuyShareOperation() {
 
         // Arrange
-        BuyShareOperationProcessor processor = new BuyShareOperationProcessor();
-        ShareOperation operation = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.ONE).quantity(1000);
+        var processor = new BuyShareOperationProcessor();
+        var operation = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.ONE).quantity(1000);
 
         // Act
-        OperationTax operationTax = processor.process(operation, new ShareOperationContext(operation));
+        var operationTax = processor.process(operation, new ShareOperationContext(operation));
 
         // Assert
         Assertions.assertThat(operationTax).isNotNull();
@@ -30,24 +30,24 @@ public class BuyShareOperationProcessorTest {
     @Test
     public void shouldRecalculateWeightedAveragePriceWhenBuyingShares() {
 
-            // Arrange
-            ShareOperation operation1 = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(70)).quantity(7000);
-            ShareOperation operation2 = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(140)).quantity(2000);
+        // Arrange
+        var operation1 = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(70)).quantity(7000);
+        var operation2 = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(140)).quantity(2000);
 
-            BuyShareOperationProcessor processor = new BuyShareOperationProcessor();
-            ShareOperationContext shareOperationContext = new ShareOperationContext(operation1);
+        var processor = new BuyShareOperationProcessor();
+        var shareOperationContext = new ShareOperationContext(operation1);
 
-            // Act
-            processor.process(operation1, shareOperationContext);
+        // Act
+        processor.process(operation1, shareOperationContext);
 
-            // Assert
-            Assertions.assertThat(shareOperationContext.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(70));
+        // Assert
+        Assertions.assertThat(shareOperationContext.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(70));
 
-            // Act
-            processor.process(operation2, shareOperationContext);
+        // Act
+        processor.process(operation2, shareOperationContext);
 
-            // Assert
-            Assertions.assertThat(shareOperationContext.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(86));
+        // Assert
+        Assertions.assertThat(shareOperationContext.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(86));
 
     }
 

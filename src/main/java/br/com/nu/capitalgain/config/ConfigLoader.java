@@ -18,7 +18,7 @@ public class ConfigLoader {
     }
 
     public BigDecimal getBigDecimalProp(String key) {
-        String property = getProp(key);
+        var property = getProp(key);
         return BigDecimal.valueOf(Double.parseDouble(property));
     }
 

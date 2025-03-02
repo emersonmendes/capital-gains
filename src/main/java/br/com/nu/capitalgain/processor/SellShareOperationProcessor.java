@@ -23,14 +23,14 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
     @Override
     public OperationTax process(ShareOperation operation, ShareOperationContext context) {
 
-        BigDecimal weightedAvgCost = context.getWeightedAvgCost();
-        BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
+        var weightedAvgCost = context.getWeightedAvgCost();
+        var newShares = BigDecimal.valueOf(operation.quantity());
 
-        final BigDecimal totalCost = newShares.multiply(operation.unitCost());
+        final var totalCost = newShares.multiply(operation.unitCost());
 
         context.updateTotalShares(context.getTotalShares().subtract(newShares));
 
-        BigDecimal capitalGain = totalCost
+        var capitalGain = totalCost
             .subtract(weightedAvgCost.multiply(newShares))
             .subtract(context.getLoss());
 
@@ -50,7 +50,7 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
     }
 
     private OperationTax applyTax(BigDecimal capitalGain) {
-        BigDecimal tax = capitalGain.multiply(taxRate).divide(BigDecimal.valueOf(100), 2, UP);
+        var tax = capitalGain.multiply(taxRate).divide(BigDecimal.valueOf(100), 2, UP);
         return OperationTax.of(tax);
     }
 
@@ -60,9 +60,9 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
 
     private boolean isTaxable(ShareOperation operation, BigDecimal weightedAvgCost) {
 
-        BigDecimal unitCost = operation.unitCost();
-        BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
-        BigDecimal totalCost = newShares.multiply(unitCost);
+        var unitCost = operation.unitCost();
+        var newShares = BigDecimal.valueOf(operation.quantity());
+        var totalCost = newShares.multiply(unitCost);
 
         if(isGreaterThanOrEqual(taxExemptThreshold, totalCost)){
             return false;

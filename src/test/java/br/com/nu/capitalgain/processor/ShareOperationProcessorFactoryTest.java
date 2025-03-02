@@ -17,14 +17,14 @@ public class ShareOperationProcessorFactoryTest {
     public void shouldThrowIllegalArgumentExceptionWhenProcessorDoesNotExist() {
 
         // Arrange
-        ConfigLoader configMock = mock(ConfigLoader.class);
+        var configMock = mock(ConfigLoader.class);
         when(configMock.getBigDecimalProp(eq("tax.exempt.threshold"))).thenReturn(BigDecimal.valueOf(20000));
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
 
         var shareOperationProcessorFactory = new ShareOperationProcessorFactory(configMock);
 
         // Act
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        var exception = assertThrows(IllegalArgumentException.class, () -> {
             shareOperationProcessorFactory.getInstance(null);
         });
 

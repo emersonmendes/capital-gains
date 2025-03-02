@@ -14,7 +14,7 @@ public class CapitalGainApplication {
         final var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
         final var jsonMapper = new JsonMapper();
         final var shareOperationConsole = new ShareOperationConsole(shareOperationService, jsonMapper);
-        String stdout = shareOperationConsole.start(args);
+        final var stdout = shareOperationConsole.start(args);
         System.out.println(stdout);
     }
 

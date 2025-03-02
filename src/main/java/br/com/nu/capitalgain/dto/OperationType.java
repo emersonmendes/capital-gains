@@ -15,7 +15,7 @@ public enum OperationType {
 
     @JsonCreator
     public static OperationType fromString(String value) {
-        for (OperationType type : OperationType.values()) {
+        for (var type : OperationType.values()) {
             if (type.key.equalsIgnoreCase(value)) {
                 return type;
             }

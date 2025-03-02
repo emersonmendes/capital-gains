@@ -16,7 +16,7 @@ public class ShareOperationProcessorFactory {
     }
 
     public ShareOperationProcessor getInstance(OperationType type){
-        ShareOperationProcessor processor = processors.get(type);
+        var processor = processors.get(type);
         if(processor == null){
             throw new IllegalArgumentException("Type not found for operation: " + type);
         }

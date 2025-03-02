@@ -23,10 +23,7 @@ public class ShareOperationConsole {
     private final ShareOperationService shareOperationService;
     private final JsonMapper jsonMapper;
 
-    public ShareOperationConsole(
-        ShareOperationService shareOperationService,
-        JsonMapper jsonMapper
-    ) {
+    public ShareOperationConsole(ShareOperationService shareOperationService, JsonMapper jsonMapper) {
         this.shareOperationService = shareOperationService;
         this.jsonMapper = jsonMapper;
     }
@@ -34,23 +31,21 @@ public class ShareOperationConsole {
     public String start(String... args) {
         if(args.length > 0) {
             return processLines(args);
-        } else {
-            return processStdin();
         }
+        return processStdin();
     }
 
     private String processStdin() {
-        InputStream inputStream = System.in;
-        try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8)) {
-            String input = scanner.useDelimiter("\\A").next();
-            String[] lines = splitJson(input);
+        try (Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8)) {
+            var input = scanner.useDelimiter("\\A").next();
+            var lines = splitJson(input);
             return processLines(lines);
         }
     }
 
     private String processLines(String[] lines) {
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
-            List<CompletableFuture<String>> futures = Stream.of(lines)
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()){
+            var futures = Stream.of(lines)
                 .flatMap(json -> Arrays.stream(splitJson(json)))
                 .map(json -> CompletableFuture.supplyAsync(() -> processJson(json), executor))
                 .toList();
