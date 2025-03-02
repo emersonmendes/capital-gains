@@ -5,6 +5,8 @@
 
 ## Sobre as bibliotecas utilizadas no projeto
 
+    - falar do plugin de cobertura???
+
 
 ## Como executar o projeto
 

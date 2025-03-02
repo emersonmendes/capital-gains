@@ -5,6 +5,7 @@ import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.ShareOperation;
 import br.com.nu.capitalgain.processor.ShareOperationContext;
+import br.com.nu.capitalgain.processor.ShareOperationProcessorFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,19 +22,24 @@ import static org.mockito.Mockito.when;
 public class ShareOperationServiceTest {
 
     private ConfigLoader configMock;
+    private ShareOperationProcessorFactory shareOperationProcessorFactory;
 
     @Before
     public void setUp(){
-        configMock = mock(ConfigLoader.class);
+
+        this.configMock = mock(ConfigLoader.class);
+        this.shareOperationProcessorFactory = mock(ShareOperationProcessorFactory.class);
+
         when(configMock.getBigDecimalProp(eq("tax.exempt.threshold"))).thenReturn(BigDecimal.valueOf(20000));
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
+
     }
 
     @Test // Caso #1
     public void shouldNotPayTaxesForSellOperationsBelowThreshold() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),
@@ -60,7 +66,7 @@ public class ShareOperationServiceTest {
     public void shouldPayTaxesWhenSellingPriceIsGreaterThanWeightedAvgCost() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -87,7 +93,7 @@ public class ShareOperationServiceTest {
     public void shouldApplyTaxesAfterDeductingAccumulatedLoss() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -114,7 +120,7 @@ public class ShareOperationServiceTest {
     public void shouldProcessOperationWithNoNetLossOrCapitalGain() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -141,7 +147,7 @@ public class ShareOperationServiceTest {
     public void shouldPayTaxOnlyAfterCapitalGainWhenNoLossOrPreviousGainRemains() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -170,7 +176,7 @@ public class ShareOperationServiceTest {
     public void shouldValidateCase6() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -200,7 +206,7 @@ public class ShareOperationServiceTest {
     public void shouldValidateCase7() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -238,7 +244,7 @@ public class ShareOperationServiceTest {
     public void shouldValidateCase8() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
@@ -267,7 +273,7 @@ public class ShareOperationServiceTest {
     public void shouldApply20PercentTaxOnOperationCapitalGain() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
 
         List<ShareOperation> operations = List.of(
@@ -293,7 +299,7 @@ public class ShareOperationServiceTest {
     public void shouldRecalculateWeightedAveragePriceAfterBuyAndSellOperations() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(5),
@@ -314,7 +320,7 @@ public class ShareOperationServiceTest {
     public void shouldOffsetAccumulatedLossAgainstMultipleFutureCapitalGainsUntilFullyDeducted() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(configMock);
+        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(05.00)).quantity(5000),

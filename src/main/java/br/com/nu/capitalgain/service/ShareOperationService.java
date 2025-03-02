@@ -12,8 +12,8 @@ public class ShareOperationService {
 
     private final ShareOperationProcessorFactory shareOperationProcessorFactory;
 
-    public ShareOperationService(ConfigLoader config) {
-        shareOperationProcessorFactory = new ShareOperationProcessorFactory(config);
+    public ShareOperationService(ShareOperationProcessorFactory shareOperationProcessorFactory) {
+        this.shareOperationProcessorFactory = shareOperationProcessorFactory;
     }
 
     public List<OperationTax> calculate(List<ShareOperation> operations, ShareOperationContext context) {
