@@ -52,7 +52,7 @@ public class ShareOperationConsole {
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
             List<CompletableFuture<String>> futures = Stream.of(lines)
                 .flatMap(json -> Arrays.stream(splitJson(json)))
-                .map(json -> CompletableFuture.supplyAsync(() -> calculate(json), executor))
+                .map(json -> CompletableFuture.supplyAsync(() -> processJson(json), executor))
                 .toList();
             return futures.stream()
                 .map(CompletableFuture::join)
@@ -60,7 +60,7 @@ public class ShareOperationConsole {
         }
     }
 
-    private String calculate(String json) {
+    private String processJson(String json) {
         try {
             List<ShareOperation> operations = jsonMapper.readValue(json, new TypeReference<>() {});
             final var context = new ShareOperationContext(operations.getFirst());
