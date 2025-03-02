@@ -1,17 +1,17 @@
 package br.com.nu.capitalgain.processor;
 
 import br.com.nu.capitalgain.dto.OperationTax;
-import br.com.nu.capitalgain.dto.ShareOperation;
 import br.com.nu.capitalgain.dto.OperationType;
+import br.com.nu.capitalgain.dto.ShareOperation;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 
-class BuyShareOperationProcessorTest {
+public class BuyShareOperationProcessorTest {
 
     @Test
-    void shouldReturnZeroTaxWhenDoABuyShareOperation() {
+    public void shouldReturnZeroTaxWhenDoABuyShareOperation() {
 
         // Arrange
         BuyShareOperationProcessor processor = new BuyShareOperationProcessor();

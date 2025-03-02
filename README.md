@@ -5,8 +5,12 @@
 
 ## Sobre as bibliotecas utilizadas no projeto
 
-    - falar do plugin de cobertura???
-
+- Junit
+  - Para ...
+- AssertJ
+  - Para ...
+- Mockito
+  - Para ...
 
 ## Como executar o projeto
 

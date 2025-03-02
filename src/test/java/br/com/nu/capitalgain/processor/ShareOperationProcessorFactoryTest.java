@@ -2,7 +2,7 @@ package br.com.nu.capitalgain.processor;
 
 import br.com.nu.capitalgain.config.ConfigLoader;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 public class ShareOperationProcessorFactoryTest {
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenProcessorDoesNotExist() {
+    public void shouldThrowIllegalArgumentExceptionWhenProcessorDoesNotExist() {
 
         // Arrange
         ConfigLoader configMock = mock(ConfigLoader.class);
