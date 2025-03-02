@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  capital-gains:
+    image: openjdk:21
+    container_name: capital-gains
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: ["/bin/sh", "-c", "java -jar target/capital-gains.jar"]
+    environment:
+      - MAVEN_OPTS=-Xmx512m
+    depends_on:
+      - maven-build
+
+  maven-build:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: maven-build
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: ["mvn", "clean", "package"]
