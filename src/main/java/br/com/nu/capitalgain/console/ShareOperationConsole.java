@@ -5,7 +5,7 @@ import br.com.nu.capitalgain.processor.ShareOperationContext;
 import br.com.nu.capitalgain.service.ShareOperationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -21,14 +21,14 @@ import java.util.stream.Stream;
 public class ShareOperationConsole {
 
     private final ShareOperationService shareOperationService;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     public ShareOperationConsole(
         ShareOperationService shareOperationService,
-        ObjectMapper objectMapper
+        JsonMapper jsonMapper
     ) {
         this.shareOperationService = shareOperationService;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
     }
 
     public String start(String... args) {
@@ -42,7 +42,7 @@ public class ShareOperationConsole {
     private String processStdin() {
         InputStream inputStream = System.in;
         try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8)) {
-            String input = scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "";
+            String input = scanner.useDelimiter("\\A").next();
             String[] lines = splitJson(input);
             return processLines(lines);
         }
@@ -62,10 +62,10 @@ public class ShareOperationConsole {
 
     private String calculate(String json) {
         try {
-            List<ShareOperation> operations = objectMapper.readValue(json, new TypeReference<>() {});
+            List<ShareOperation> operations = jsonMapper.readValue(json, new TypeReference<>() {});
             final var context = new ShareOperationContext(operations.getFirst());
             final var taxes = shareOperationService.calculate(operations, context);
-            return objectMapper.writeValueAsString(taxes);
+            return jsonMapper.writeValueAsString(taxes);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Could not process json", e);
         }

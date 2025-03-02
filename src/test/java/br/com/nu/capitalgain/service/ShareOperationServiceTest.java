@@ -28,10 +28,10 @@ public class ShareOperationServiceTest {
     public void setUp(){
 
         this.configMock = mock(ConfigLoader.class);
-        this.shareOperationProcessorFactory = mock(ShareOperationProcessorFactory.class);
-
         when(configMock.getBigDecimalProp(eq("tax.exempt.threshold"))).thenReturn(BigDecimal.valueOf(20000));
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
+
+        this.shareOperationProcessorFactory = new ShareOperationProcessorFactory(this.configMock);
 
     }
 
@@ -39,7 +39,7 @@ public class ShareOperationServiceTest {
     public void shouldNotPayTaxesForSellOperationsBelowThreshold() {
 
         // Arrange
-        var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
+        var shareOperationService = new ShareOperationService(this.shareOperationProcessorFactory);
 
         List<ShareOperation> operations = List.of(
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(100),

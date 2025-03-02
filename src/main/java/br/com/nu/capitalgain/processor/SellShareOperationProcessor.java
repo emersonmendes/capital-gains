@@ -5,6 +5,7 @@ import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.ShareOperation;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import static java.math.RoundingMode.UP;
 
@@ -14,6 +15,7 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
     private final BigDecimal taxRate;
 
     public SellShareOperationProcessor(ConfigLoader config){
+        Objects.requireNonNull(config, "ConfigLoader cannot be null");
         taxExemptThreshold = config.getBigDecimalProp("tax.exempt.threshold");
         taxRate = config.getBigDecimalProp("tax.rate");
     }

@@ -13,10 +13,6 @@ public enum OperationType {
         this.key = key;
     }
 
-    public String getKey() {
-        return key;
-    }
-
     @JsonCreator
     public static OperationType fromString(String value) {
         for (OperationType type : OperationType.values()) {

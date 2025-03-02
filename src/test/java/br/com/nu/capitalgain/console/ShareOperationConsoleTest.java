@@ -2,7 +2,7 @@ package br.com.nu.capitalgain.console;
 
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.service.ShareOperationService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class ShareOperationConsoleTest {
 
         // Arrange
         var shareOperationServiceMock =  mock(ShareOperationService.class);
-        var shareOperationConsole = new ShareOperationConsole(shareOperationServiceMock, new ObjectMapper());
+        var shareOperationConsole = new ShareOperationConsole(shareOperationServiceMock, new JsonMapper());
 
         when(shareOperationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
@@ -60,7 +60,7 @@ public class ShareOperationConsoleTest {
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
 
-        var shareOperationConsole = new ShareOperationConsole(shareOperationServiceMock, new ObjectMapper());
+        var shareOperationConsole = new ShareOperationConsole(shareOperationServiceMock, new JsonMapper());
 
         String line = """
             [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},
