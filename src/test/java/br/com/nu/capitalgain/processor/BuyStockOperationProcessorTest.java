@@ -14,11 +14,18 @@ class BuyStockOperationProcessorTest {
 
     @Test
     void shouldReturnZeroTaxWhenDoABuyStockOperation() {
+
+        // Arrange
         BuyStockOperationProcessor processor = new BuyStockOperationProcessor();
         StockOperation operation = StockOperation.operation(OperationType.BUY).unitCost(BigDecimal.ONE).quantity(1000);
+
+        // Act
         OperationTax operationTax = processor.proccess(operation, new StockOperationContext(operation));
+
+        // Assert
         Assertions.assertThat(operationTax).isNotNull();
-        Assertions.assertThat(operationTax.tax()).isEqualTo(OperationTax.ofZero().tax());
+        Assertions.assertThat(operationTax).isEqualTo(OperationTax.ofZero());
+
     }
 
 }

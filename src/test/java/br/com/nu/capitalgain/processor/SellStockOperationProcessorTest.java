@@ -23,15 +23,21 @@ class SellStockOperationProcessorTest {
     @Test
     void shouldReturnZeroOperationTax() {
 
+        // Arrange
         configMock = mock(ConfigLoader.class);
         when(configMock.getBigDecimalProp(eq("tax.exempt.amount.max"))).thenReturn(BigDecimal.valueOf(20));
         when(configMock.getBigDecimalProp(eq("tax.paid.percentage"))).thenReturn(BigDecimal.valueOf(20));
 
         SellStockOperationProcessor processor = new SellStockOperationProcessor(configMock);
         StockOperation operation = StockOperation.operation(OperationType.SELL).unitCost(BigDecimal.valueOf(10000)).quantity(1000);
+
+        // Act
         OperationTax operationTax = processor.proccess(operation, new StockOperationContext(operation));
+
+        // Assert
         Assertions.assertThat(operationTax).isNotNull();
-        Assertions.assertThat(operationTax.tax()).isEqualTo(OperationTax.ofZero().tax());
+        Assertions.assertThat(operationTax).isEqualTo(OperationTax.ofZero());
+
     }
 
 }

@@ -20,6 +20,7 @@ public class StockOperationConsoleTest {
     @Test
     public void shouldProcessMultiLinesViaArguments() {
 
+        // Arrange
         var stockOperationServiceMock =  mock(StockOperationService.class);
         var stockOperationConsole = new StockOperationConsole(stockOperationServiceMock, new ObjectMapper());
 
@@ -37,19 +38,21 @@ public class StockOperationConsoleTest {
             {"operation":"sell", "unit-cost":10.00, "quantity": 5000}]
         """;
 
+        // Act
         String stdout = stockOperationConsole.start(line1, line2);
 
-        String result = """
+        // Assert
+        Assertions.assertThat(stdout).isEqualTo("""
         [{"tax":0.00},{"tax":10000.00}]
-        [{"tax":0.00},{"tax":10000.00}]""";
-
-        Assertions.assertThat(stdout).isEqualTo(result);
+        [{"tax":0.00},{"tax":10000.00}]
+        """.trim());
 
     }
 
     @Test
     public void shouldProcessMultiLinesViaStdin() {
 
+        // Arrange
         var stockOperationServiceMock =  mock(StockOperationService.class);
 
         when(stockOperationServiceMock.calculate(anyList())).thenReturn(List.of(
@@ -59,19 +62,22 @@ public class StockOperationConsoleTest {
         var stockOperationConsole = new StockOperationConsole(stockOperationServiceMock, new ObjectMapper());
 
         String line = """
-            [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},{"operation":"sell", "unit-cost":20.00, "quantity": 5000}]
-            [{"operation":"buy", "unit-cost":20.00, "quantity": 10000},{"operation":"sell", "unit-cost":10.00, "quantity": 5000}]
+            [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},
+            {"operation":"sell", "unit-cost":20.00, "quantity": 5000}]
+            [{"operation":"buy", "unit-cost":20.00, "quantity": 10000},
+            {"operation":"sell", "unit-cost":10.00, "quantity": 5000}]
         """;
 
         System.setIn(new ByteArrayInputStream(line.getBytes(StandardCharsets.UTF_8)));
 
+        // Act
         String stdout = stockOperationConsole.start();
 
-        String result = """
+        // Assert
+        Assertions.assertThat(stdout).isEqualTo("""
         [{"tax":0.00},{"tax":10000.00}]
-        [{"tax":0.00},{"tax":10000.00}]""";
-
-        Assertions.assertThat(stdout).isEqualTo(result);
+        [{"tax":0.00},{"tax":10000.00}]
+        """.trim());
 
     }
 
