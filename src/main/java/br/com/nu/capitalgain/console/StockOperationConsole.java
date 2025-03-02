@@ -57,9 +57,9 @@ public class StockOperationConsole {
         }
     }
 
-    private String calculate(String jsonInput) {
+    private String calculate(String input) {
         try {
-            List<StockOperation> operations  = objectMapper.readValue(jsonInput, new TypeReference<>() {});
+            List<StockOperation> operations  = objectMapper.readValue(input, new TypeReference<>() {});
             var taxes = stockOperationService.calculate(operations);
             return objectMapper.writeValueAsString(taxes);
         } catch (JsonProcessingException e) {
