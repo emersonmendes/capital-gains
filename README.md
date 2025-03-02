@@ -35,6 +35,8 @@
 ```
 
 ## Como executar os testes
-
+``` shell
+    docker compose run --rm capital-gains-maven mvn test
+```
 
 ## Notas adicionais
