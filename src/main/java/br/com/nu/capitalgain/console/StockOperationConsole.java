@@ -63,7 +63,6 @@ public class StockOperationConsole {
             var taxes = stockOperationService.calculate(operations);
             return objectMapper.writeValueAsString(taxes);
         } catch (JsonProcessingException e) {
-            //TODO: improve Exception feedback
             throw new RuntimeException("Could not process json", e);
         }
     }

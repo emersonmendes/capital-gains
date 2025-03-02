@@ -24,8 +24,8 @@ public class StockOperationServiceTest {
     @Before
     public void setUp(){
         configMock = mock(ConfigLoader.class);
-        when(configMock.getBigDecimalProp(eq("tax.exempt.amount.max"))).thenReturn(BigDecimal.valueOf(20000));
-        when(configMock.getBigDecimalProp(eq("tax.paid.percentage"))).thenReturn(BigDecimal.valueOf(20));
+        when(configMock.getBigDecimalProp(eq("tax.exempt.threshold"))).thenReturn(BigDecimal.valueOf(20000));
+        when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
     }
 
     @Test // Caso #1
@@ -54,7 +54,7 @@ public class StockOperationServiceTest {
     }
 
     @Test // Caso #2
-    public void shouldPayTaxesWhenSellingPriceIsGreaterThanWAP() {
+    public void shouldPayTaxesWhenSellingPriceIsGreaterThanWAC() {
 
         // Arrange
         var stockOperationService = new StockOperationService(configMock);

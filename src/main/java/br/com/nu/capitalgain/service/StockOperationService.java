@@ -20,7 +20,7 @@ public class StockOperationService {
         final StockOperationContext context = new StockOperationContext(operations.getFirst());
         return operations.stream()
             .map(operation -> stockOperationProcessorFactory.getInstance(operation.type())
-            .proccess(operation, context))
+            .process(operation, context))
             .toList();
     }
 

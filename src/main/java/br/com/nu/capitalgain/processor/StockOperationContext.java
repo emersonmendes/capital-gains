@@ -6,30 +6,30 @@ import java.math.BigDecimal;
 
 public class StockOperationContext {
 
-    private BigDecimal currentWap;
-    private BigDecimal currentStocks;
+    private BigDecimal weightedAvgCost;
+    private BigDecimal totalShares;
     private BigDecimal loss;
 
     public StockOperationContext(final StockOperation firstOperation) {
-        this.currentWap = firstOperation.unitCost();
-        this.currentStocks = BigDecimal.valueOf(firstOperation.quantity());
+        this.weightedAvgCost = firstOperation.unitCost();
+        this.totalShares = BigDecimal.valueOf(firstOperation.quantity());
         this.loss = BigDecimal.ZERO;
     }
 
-    public BigDecimal getCurrentWap() {
-        return currentWap;
+    public BigDecimal getWeightedAvgCost() {
+        return weightedAvgCost;
     }
 
-    public void updateCurrentWap(BigDecimal currentWap) {
-        this.currentWap = currentWap;
+    public void updateWeightedAvgCost(BigDecimal newWeightedAvgCost) {
+        this.weightedAvgCost = newWeightedAvgCost;
     }
 
-    public BigDecimal getCurrentStocks() {
-        return currentStocks;
+    public BigDecimal getTotalShares() {
+        return totalShares;
     }
 
-    public void updateCurrentStocks(BigDecimal currentStocks) {
-        this.currentStocks = currentStocks;
+    public void updateTotalShares(BigDecimal totalShares) {
+        this.totalShares = totalShares;
     }
 
     public BigDecimal getLoss() {

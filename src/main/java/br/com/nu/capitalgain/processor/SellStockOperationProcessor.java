@@ -10,69 +10,68 @@ import static java.math.RoundingMode.UP;
 
 public class SellStockOperationProcessor implements StockOperationProcessor {
 
-    private final BigDecimal taxExemptAmountMax;
-    private final BigDecimal taxPaidPercentage;
+    private final BigDecimal taxExemptThreshold;
+    private final BigDecimal taxRate;
 
     public SellStockOperationProcessor(ConfigLoader config){
-        taxExemptAmountMax = config.getBigDecimalProp("tax.exempt.amount.max");
-        taxPaidPercentage = config.getBigDecimalProp("tax.paid.percentage");
+        taxExemptThreshold = config.getBigDecimalProp("tax.exempt.threshold");
+        taxRate = config.getBigDecimalProp("tax.rate");
     }
 
     @Override
-    public OperationTax proccess(StockOperation operation, StockOperationContext context) {
+    public OperationTax process(StockOperation operation, StockOperationContext context) {
 
-        BigDecimal currentWap = context.getCurrentWap();
-        BigDecimal sharesTraded = BigDecimal.valueOf(operation.quantity());
+        BigDecimal weightedAvgCost = context.getWeightedAvgCost();
+        BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
 
-        final BigDecimal totalCost = sharesTraded.multiply(operation.unitCost());
+        final BigDecimal totalCost = newShares.multiply(operation.unitCost());
 
-        context.updateCurrentStocks(context.getCurrentStocks().subtract(sharesTraded));
+        context.updateTotalShares(context.getTotalShares().subtract(newShares));
 
-        BigDecimal profit = totalCost
-            .subtract(currentWap.multiply(sharesTraded))
+        BigDecimal capitalGain = totalCost
+            .subtract(weightedAvgCost.multiply(newShares))
             .subtract(context.getLoss());
 
         context.clearLoss();
 
-        if(isNegative(profit)){
-            context.updateLoss(profit.negate());
-            profit = BigDecimal.ZERO;
+        if(isNegative(capitalGain)){
+            context.updateLoss(capitalGain.negate());
+            capitalGain = BigDecimal.ZERO;
         }
 
-        if(hasTax(operation, currentWap)){
-            return calculateTax(profit);
+        if(isTaxableSale(operation, weightedAvgCost)){
+            return calculateTax(capitalGain);
         }
 
         return OperationTax.ofZero();
 
     }
 
-    private OperationTax calculateTax(BigDecimal profit) {
-        BigDecimal tax = profit.multiply(taxPaidPercentage).divide(BigDecimal.valueOf(100), 2, UP);
+    private OperationTax calculateTax(BigDecimal capitalGain) {
+        BigDecimal tax = capitalGain.multiply(taxRate).divide(BigDecimal.valueOf(100), 2, UP);
         return OperationTax.of(tax);
     }
-
 
     private static boolean isNegative(BigDecimal value) {
         return value.signum() < 0;
     }
 
-    private boolean hasTax(StockOperation operation, BigDecimal currentWap) {
+    private boolean isTaxableSale(StockOperation operation, BigDecimal weightedAvgCost) {
 
         BigDecimal unitCost = operation.unitCost();
-        BigDecimal stocks = BigDecimal.valueOf(operation.quantity());
-        BigDecimal totalCost = stocks.multiply(unitCost);
+        BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
+        BigDecimal totalCost = newShares.multiply(unitCost);
 
-        if(isGreaterThan(taxExemptAmountMax, totalCost)){
+        if(isGreaterThanOrEqual(taxExemptThreshold, totalCost)){
             return false;
         }
 
-        return isGreaterThan(unitCost, currentWap);
+        return isGreaterThanOrEqual(unitCost, weightedAvgCost);
 
     }
 
-    private boolean isGreaterThan(BigDecimal fisrtValue, BigDecimal secondValue) {
-        return fisrtValue.compareTo(secondValue) >= 0;
+    private boolean isGreaterThanOrEqual(BigDecimal firstValue, BigDecimal secondValue) {
+        return firstValue.compareTo(secondValue) >= 0;
     }
 
 }

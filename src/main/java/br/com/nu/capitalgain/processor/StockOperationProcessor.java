@@ -5,6 +5,6 @@ import br.com.nu.capitalgain.dto.StockOperation;
 
 public interface StockOperationProcessor {
 
-    OperationTax proccess(StockOperation operation, StockOperationContext context);
+    OperationTax process(StockOperation operation, StockOperationContext context);
 
 }

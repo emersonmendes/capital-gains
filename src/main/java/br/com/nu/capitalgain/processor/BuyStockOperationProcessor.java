@@ -10,16 +10,17 @@ import static java.math.RoundingMode.UP;
 public class BuyStockOperationProcessor implements StockOperationProcessor{
 
     @Override
-    public OperationTax proccess(StockOperation operation, StockOperationContext context) {
+    public OperationTax process(StockOperation operation, StockOperationContext context) {
 
-        BigDecimal currentStocks = context.getCurrentStocks();
-        BigDecimal stocks = BigDecimal.valueOf(operation.quantity());
+        BigDecimal totalShares = context.getTotalShares();
+        BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
 
-        BigDecimal wap = currentStocks.multiply(context.getCurrentWap())
-            .add(stocks.multiply(operation.unitCost()))
-            .divide(currentStocks.add(stocks), UP);
+        BigDecimal newWeightedAvgCost = totalShares
+            .multiply(context.getWeightedAvgCost())
+            .add(newShares.multiply(operation.unitCost()))
+            .divide(totalShares.add(newShares), UP);
 
-        context.updateCurrentWap(wap);
+        context.updateWeightedAvgCost(newWeightedAvgCost);
 
         return OperationTax.ofZero();
 

@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class BuyStockOperationProcessorTest {
 
     @Test
@@ -20,7 +18,7 @@ class BuyStockOperationProcessorTest {
         StockOperation operation = StockOperation.operation(OperationType.BUY).unitCost(BigDecimal.ONE).quantity(1000);
 
         // Act
-        OperationTax operationTax = processor.proccess(operation, new StockOperationContext(operation));
+        OperationTax operationTax = processor.process(operation, new StockOperationContext(operation));
 
         // Assert
         Assertions.assertThat(operationTax).isNotNull();
