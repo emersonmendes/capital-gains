@@ -15,7 +15,7 @@ public record StockOperation(
 ) {
 
     public StockOperation {
-        Objects.requireNonNull(type, "Operation type is required!");
+        Objects.requireNonNull(type, "Operation is required!");
         Objects.requireNonNull(unitCost, "Unit cost is required!");
     }
 

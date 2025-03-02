@@ -4,14 +4,11 @@ package br.com.nu.capitalgain.service;
 import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.StockOperation;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 import static br.com.nu.capitalgain.dto.enumeration.OperationType.BUY;
