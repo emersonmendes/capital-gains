@@ -54,7 +54,7 @@ public class ShareOperationConsoleTest {
     public void shouldProcessMultiLinesViaStdin() {
 
         // Arrange
-        var shareOperationServiceMock =  mock(ShareOperationService.class);
+        var shareOperationServiceMock = mock(ShareOperationService.class);
 
         when(shareOperationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))

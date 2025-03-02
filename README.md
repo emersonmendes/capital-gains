@@ -1,16 +1,24 @@
 # Projeto Nubank - Capital Gains
 
 ## Sobre as decisões técnicas
-
+  
+- Utilizando Java
+  - Linguagem no qual eu tenho mais dominio
+- 
 
 ## Sobre as bibliotecas utilizadas no projeto
 
-- Junit
-  - Para ...
+- Jackson
+  - Para serialização e desserialização de objetos JSON, facilitando a conversão entre objetos Java e JSON.
+- JUnit
+
+  - Para a criação e execução de testes unitários, garantindo a qualidade e a funcionalidade do código.
+
 - AssertJ
-  - Para ...
+  - Para fornecer uma API fluente e legível para asserções em testes, tornando a verificação de resultados mais intuitiva.
+
 - Mockito
-  - Para ...
+  - Para mockar dependências em testes, permitindo a simulação do comportamento de objetos e facilitando a testabilidade de componentes isolados.
 
 ## Como executar o projeto
 
