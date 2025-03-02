@@ -31,14 +31,10 @@ public class StockOperationConsole {
 
     public String start(String... args) {
         if(args.length > 0) {
-            return processArgs(args);
+            return processLines(args);
         } else {
             return processStdin();
         }
-    }
-
-    private String processArgs(String[] args) {
-        return processLines(args);
     }
 
     private String processStdin() {
