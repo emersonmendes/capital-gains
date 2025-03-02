@@ -1,6 +1,7 @@
 package br.com.nu.capitalgain.console;
 
 import br.com.nu.capitalgain.dto.ShareOperation;
+import br.com.nu.capitalgain.processor.ShareOperationContext;
 import br.com.nu.capitalgain.service.ShareOperationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -59,8 +60,9 @@ public class ShareOperationConsole {
 
     private String calculate(String input) {
         try {
-            List<ShareOperation> operations  = objectMapper.readValue(input, new TypeReference<>() {});
-            var taxes = shareOperationService.calculate(operations);
+            List<ShareOperation> operations = objectMapper.readValue(input, new TypeReference<>() {});
+            final var context = new ShareOperationContext(operations.getFirst());
+            final var taxes = shareOperationService.calculate(operations, context);
             return objectMapper.writeValueAsString(taxes);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Could not process json", e);

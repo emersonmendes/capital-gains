@@ -4,6 +4,7 @@ package br.com.nu.capitalgain.service;
 import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.ShareOperation;
+import br.com.nu.capitalgain.processor.ShareOperationContext;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +41,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(15.00)).quantity(100)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -65,8 +68,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(5.00)).quantity(5000)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -90,8 +95,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(3000)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -115,8 +122,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -141,8 +150,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -169,9 +180,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000)
         );
 
-        // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        var context = new ShareOperationContext(operations.getFirst());
 
+        // Act
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
         Assertions.assertThat(taxes).containsExactly(
@@ -202,8 +214,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(650)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -233,8 +247,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -259,8 +275,10 @@ public class ShareOperationServiceTest {
             ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(200.00)).quantity(1000)
         );
 
+        var context = new ShareOperationContext(operations.getFirst());
+
         // Act
-        List<OperationTax> taxes = shareOperationService.calculate(operations);
+        List<OperationTax> taxes = shareOperationService.calculate(operations, context);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -268,6 +286,27 @@ public class ShareOperationServiceTest {
             OperationTax.of(BigDecimal.ZERO),
             OperationTax.of(BigDecimal.valueOf(20_000.00))
         );
+
+    }
+
+    @Test
+    public void shouldRecalculateWeightedAveragePriceAfterBuyAndSellOperations() {
+
+        // Arrange
+        var shareOperationService = new ShareOperationService(configMock);
+        List<ShareOperation> operations = List.of(
+            ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(20.00)).quantity(10),
+            ShareOperation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(5),
+            ShareOperation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(5)
+        );
+
+        var context = new ShareOperationContext(operations.getFirst());
+
+        // Act
+        shareOperationService.calculate(operations, context);
+
+        // Assert
+        Assertions.assertThat(context.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(15.0));
 
     }
 

@@ -30,6 +30,25 @@ class BuyShareOperationProcessorTest {
     @Test
     public void shouldRecalculateWeightedAveragePriceWhenBuyingShares() {
 
+            // Arrange
+            ShareOperation operation1 = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(70)).quantity(7000);
+            ShareOperation operation2 = ShareOperation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(140)).quantity(2000);
+
+            BuyShareOperationProcessor processor = new BuyShareOperationProcessor();
+            ShareOperationContext shareOperationContext = new ShareOperationContext(operation1);
+
+            // Act
+            processor.process(operation1, shareOperationContext);
+
+            // Assert
+            Assertions.assertThat(shareOperationContext.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(70));
+
+            // Act
+            processor.process(operation2, shareOperationContext);
+
+            // Assert
+            Assertions.assertThat(shareOperationContext.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(86));
+
     }
 
 }

@@ -16,8 +16,7 @@ public class ShareOperationService {
         shareOperationProcessorFactory = new ShareOperationProcessorFactory(config);
     }
 
-    public List<OperationTax> calculate(List<ShareOperation> operations) {
-        final ShareOperationContext context = new ShareOperationContext(operations.getFirst());
+    public List<OperationTax> calculate(List<ShareOperation> operations, ShareOperationContext context) {
         return operations.stream()
             .map(operation -> shareOperationProcessorFactory.getInstance(operation.type())
             .process(operation, context))

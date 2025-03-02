@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,7 +25,7 @@ public class ShareOperationConsoleTest {
         var shareOperationServiceMock =  mock(ShareOperationService.class);
         var shareOperationConsole = new ShareOperationConsole(shareOperationServiceMock, new ObjectMapper());
 
-        when(shareOperationServiceMock.calculate(anyList())).thenReturn(List.of(
+        when(shareOperationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
 
@@ -55,7 +56,7 @@ public class ShareOperationConsoleTest {
         // Arrange
         var shareOperationServiceMock =  mock(ShareOperationService.class);
 
-        when(shareOperationServiceMock.calculate(anyList())).thenReturn(List.of(
+        when(shareOperationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
 
