@@ -1,7 +1,7 @@
 package br.com.nu.capitalgain.console;
 
-import br.com.nu.capitalgain.dto.StockOperation;
-import br.com.nu.capitalgain.service.StockOperationService;
+import br.com.nu.capitalgain.dto.ShareOperation;
+import br.com.nu.capitalgain.service.ShareOperationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,16 +16,16 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class StockOperationConsole {
+public class ShareOperationConsole {
 
-    private final StockOperationService stockOperationService;
+    private final ShareOperationService shareOperationService;
     private final ObjectMapper objectMapper;
 
-    public StockOperationConsole(
-        StockOperationService stockOperationService,
+    public ShareOperationConsole(
+        ShareOperationService shareOperationService,
         ObjectMapper objectMapper
     ) {
-        this.stockOperationService = stockOperationService;
+        this.shareOperationService = shareOperationService;
         this.objectMapper = objectMapper;
     }
 
@@ -59,8 +59,8 @@ public class StockOperationConsole {
 
     private String calculate(String input) {
         try {
-            List<StockOperation> operations  = objectMapper.readValue(input, new TypeReference<>() {});
-            var taxes = stockOperationService.calculate(operations);
+            List<ShareOperation> operations  = objectMapper.readValue(input, new TypeReference<>() {});
+            var taxes = shareOperationService.calculate(operations);
             return objectMapper.writeValueAsString(taxes);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Could not process json", e);

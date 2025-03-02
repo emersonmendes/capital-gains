@@ -2,24 +2,24 @@ package br.com.nu.capitalgain.processor;
 
 import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
-import br.com.nu.capitalgain.dto.StockOperation;
+import br.com.nu.capitalgain.dto.ShareOperation;
 
 import java.math.BigDecimal;
 
 import static java.math.RoundingMode.UP;
 
-public class SellStockOperationProcessor implements StockOperationProcessor {
+public class SellShareOperationProcessor implements ShareOperationProcessor {
 
     private final BigDecimal taxExemptThreshold;
     private final BigDecimal taxRate;
 
-    public SellStockOperationProcessor(ConfigLoader config){
+    public SellShareOperationProcessor(ConfigLoader config){
         taxExemptThreshold = config.getBigDecimalProp("tax.exempt.threshold");
         taxRate = config.getBigDecimalProp("tax.rate");
     }
 
     @Override
-    public OperationTax process(StockOperation operation, StockOperationContext context) {
+    public OperationTax process(ShareOperation operation, ShareOperationContext context) {
 
         BigDecimal weightedAvgCost = context.getWeightedAvgCost();
         BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
@@ -40,14 +40,14 @@ public class SellStockOperationProcessor implements StockOperationProcessor {
         }
 
         if(isTaxableSale(operation, weightedAvgCost)){
-            return calculateTax(capitalGain);
+            return applyTax(capitalGain);
         }
 
         return OperationTax.ofZero();
 
     }
 
-    private OperationTax calculateTax(BigDecimal capitalGain) {
+    private OperationTax applyTax(BigDecimal capitalGain) {
         BigDecimal tax = capitalGain.multiply(taxRate).divide(BigDecimal.valueOf(100), 2, UP);
         return OperationTax.of(tax);
     }
@@ -56,7 +56,7 @@ public class SellStockOperationProcessor implements StockOperationProcessor {
         return value.signum() < 0;
     }
 
-    private boolean isTaxableSale(StockOperation operation, BigDecimal weightedAvgCost) {
+    private boolean isTaxableSale(ShareOperation operation, BigDecimal weightedAvgCost) {
 
         BigDecimal unitCost = operation.unitCost();
         BigDecimal newShares = BigDecimal.valueOf(operation.quantity());
