@@ -5,15 +5,17 @@ import br.com.nu.capitalgain.processor.ShareOperationContext;
 import br.com.nu.capitalgain.service.ShareOperationService;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 public class ShareOperationConsole {
 
@@ -27,24 +29,38 @@ public class ShareOperationConsole {
 
     public void start(String... args) {
         if(args.length > 0) {
-            processLines(args);
+            processArgs(args);
             return;
         }
         processStdin();
     }
 
     private void processStdin() {
-        try (var scanner = new Scanner(System.in, StandardCharsets.UTF_8)) {
-            var input = scanner.useDelimiter("\\A").next();
-            var lines = splitJson(input);
-            processLines(lines);
+        try (
+            final var reader = new BufferedReader(new InputStreamReader(System.in, UTF_8));
+            final var executor = newVirtualThreadPerTaskExecutor();
+        ) {
+            final var jsonBuffer = new StringBuilder();
+            int charCode;
+
+            while ((charCode = reader.read()) != -1) {
+                final var currentChar = (char) charCode;
+                jsonBuffer.append(currentChar);
+                if (currentChar == ']') {
+                    final var json = jsonBuffer.toString();
+                    jsonBuffer.setLength(0);
+                    runAsync(() -> processJson(json), executor);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading input", e);
         }
     }
 
-    private void processLines(String[] lines) {
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()){
-            Stream.of(lines)
-                .flatMap(line -> Arrays.stream(splitJson(line)))
+    private void processArgs(String[] args) {
+        try (var executor = newVirtualThreadPerTaskExecutor()){
+            Stream.of(args)
+                .flatMap(arg -> Arrays.stream(splitJson(arg)))
                 .map(json -> runAsync(() -> processJson(json), executor))
                 .forEach(CompletableFuture::join);
         }
@@ -54,8 +70,10 @@ public class ShareOperationConsole {
         final var operations = jsonMapper.readList(json, new TypeReference<List<ShareOperation>>() {});
         final var context = new ShareOperationContext(operations.getFirst());
         final var taxes = shareOperationService.calculate(operations, context);
-        jsonMapper.writeValue(System.out, taxes);
-        System.out.println();
+        synchronized (System.out) {
+            jsonMapper.writeValue(System.out, taxes);
+            System.out.println();
+        }
     }
 
     private static String[] splitJson(String input) {

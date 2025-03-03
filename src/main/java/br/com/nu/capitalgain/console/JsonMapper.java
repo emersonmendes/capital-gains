@@ -1,6 +1,7 @@
 package br.com.nu.capitalgain.console;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,4 +34,5 @@ public class JsonMapper {
             throw new RuntimeException("Could not write json", e);
         }
     }
+
 }
