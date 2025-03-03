@@ -6,6 +6,8 @@
   - Escolhido por ser a linguagem na qual tenho mais experiência.
   - Benefícios da versão 21: suporte a Virtual Threads, melhorias de desempenho e maior maturidade da linguagem.
 - Uso do Java Streams API para manipulação eficiente de dados.
+- Uso de BufferedReader para melhorar a performance na leitura de entrada
+  - Reduz chamadas de I/O ao ler grandes volumes de dados de forma eficiente.
 - Implementação de princípios SOLID para melhor organização e manutenção do código.
 - Uso de containers Docker
   - Facilita a execução do projeto sem necessidade de configurações adicionais na máquina.
