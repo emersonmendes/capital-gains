@@ -36,7 +36,7 @@ public class ShareOperationConsole {
     }
 
     private String processStdin() {
-        try (Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8)) {
+        try (var scanner = new Scanner(System.in, StandardCharsets.UTF_8)) {
             var input = scanner.useDelimiter("\\A").next();
             var lines = splitJson(input);
             return processLines(lines);
