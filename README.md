@@ -27,6 +27,9 @@
 
 ## Como executar o projeto
 
+    Obs: É apenas necessário a instalação do Docker. 
+    Foi utilizado nesse projeto a versão 28.0.1
+
 ### 1 - Fazer o build
 ``` shell
     docker compose run --rm capital-gains-maven mvn clean install
@@ -56,4 +59,3 @@
     docker compose run --rm capital-gains-maven mvn test
 ```
 
-## Notas adicionais
