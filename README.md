@@ -16,12 +16,9 @@
 - Jackson
   - Para serialização e desserialização de objetos JSON, facilitando a conversão entre objetos Java e JSON.
 - JUnit
-
   - Para a criação e execução de testes unitários, garantindo a qualidade e a funcionalidade do código.
-
 - AssertJ
   - Para fornecer uma API fluente e legível para asserções em testes, tornando a verificação de resultados mais intuitiva.
-
 - Mockito
   - Para mockar dependências em testes, permitindo a simulação do comportamento de objetos e facilitando a testabilidade de componentes isolados.
 
