@@ -51,7 +51,7 @@ public class ShareOperationConsole {
     }
 
     private void processJson(String json) {
-        List<ShareOperation> operations = jsonMapper.readList(json, new TypeReference<>() {});
+        final var operations = jsonMapper.readList(json, new TypeReference<List<ShareOperation>>() {});
         final var context = new ShareOperationContext(operations.getFirst());
         final var taxes = shareOperationService.calculate(operations, context);
         jsonMapper.writeValue(System.out, taxes);
