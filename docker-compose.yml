@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   capital-gains-app:
     image: openjdk:21

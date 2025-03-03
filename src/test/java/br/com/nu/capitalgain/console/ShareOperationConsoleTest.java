@@ -2,11 +2,14 @@ package br.com.nu.capitalgain.console;
 
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.service.ShareOperationService;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.assertj.core.api.Assertions;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -17,6 +20,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ShareOperationConsoleTest {
+
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+
+    @Before
+    public void setUp() {
+        System.setOut(new PrintStream(outContent));
+    }
+
+    @After
+    public void tearDown() {
+        System.setOut(originalOut);
+    }
 
     @Test
     public void shouldProcessMultiLinesViaArguments() {
@@ -40,13 +56,13 @@ public class ShareOperationConsoleTest {
         """;
 
         // Act
-        String stdout = shareOperationConsole.start(line1, line2);
+        shareOperationConsole.start(line1, line2);
 
         // Assert
-        Assertions.assertThat(stdout).isEqualTo("""
+        Assertions.assertThat(outContent.toString()).isEqualTo("""
         [{"tax":0.00},{"tax":10000.00}]
         [{"tax":0.00},{"tax":10000.00}]
-        """.trim());
+        """);
 
     }
 
@@ -72,13 +88,13 @@ public class ShareOperationConsoleTest {
         System.setIn(new ByteArrayInputStream(line.getBytes(StandardCharsets.UTF_8)));
 
         // Act
-        String stdout = shareOperationConsole.start();
+        shareOperationConsole.start();
 
         // Assert
-        Assertions.assertThat(stdout).isEqualTo("""
+        Assertions.assertThat(outContent.toString()).isEqualTo("""
         [{"tax":0.00},{"tax":10000.00}]
         [{"tax":0.00},{"tax":10000.00}]
-        """.trim());
+        """);
 
     }
 
