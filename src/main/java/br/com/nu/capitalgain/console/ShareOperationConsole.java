@@ -18,6 +18,8 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.concurrent.CompletableFuture.supplyAsync;
+
 public class ShareOperationConsole {
 
     private final ShareOperationService shareOperationService;
@@ -45,11 +47,9 @@ public class ShareOperationConsole {
 
     private String processLines(String[] lines) {
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()){
-            var futures = Stream.of(lines)
-                .flatMap(json -> Arrays.stream(splitJson(json)))
-                .map(json -> CompletableFuture.supplyAsync(() -> processJson(json), executor))
-                .toList();
-            return futures.stream()
+            return Stream.of(lines)
+                .flatMap(line -> Arrays.stream(splitJson(line)))
+                .map(json -> supplyAsync(() -> processJson(json), executor))
                 .map(CompletableFuture::join)
                 .collect(Collectors.joining("\n"));
         }
