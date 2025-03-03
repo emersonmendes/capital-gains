@@ -12,8 +12,8 @@ public class BuyShareOperationProcessor implements ShareOperationProcessor {
     @Override
     public OperationTax process(ShareOperation operation, ShareOperationContext context) {
 
-        var totalShares = context.getTotalShares();
-        var newShares = BigDecimal.valueOf(operation.quantity());
+        final var totalShares = context.getTotalShares();
+        final var newShares = BigDecimal.valueOf(operation.quantity());
 
         var newWeightedAvgCost = totalShares
             .multiply(context.getWeightedAvgCost())

@@ -23,9 +23,8 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
     @Override
     public OperationTax process(ShareOperation operation, ShareOperationContext context) {
 
-        var weightedAvgCost = context.getWeightedAvgCost();
-        var newShares = BigDecimal.valueOf(operation.quantity());
-
+        final var weightedAvgCost = context.getWeightedAvgCost();
+        final var newShares = BigDecimal.valueOf(operation.quantity());
         final var totalCost = newShares.multiply(operation.unitCost());
 
         context.updateTotalShares(context.getTotalShares().subtract(newShares));
@@ -60,9 +59,9 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
 
     private boolean isTaxable(ShareOperation operation, BigDecimal weightedAvgCost) {
 
-        var unitCost = operation.unitCost();
-        var newShares = BigDecimal.valueOf(operation.quantity());
-        var totalCost = newShares.multiply(unitCost);
+        final var unitCost = operation.unitCost();
+        final var newShares = BigDecimal.valueOf(operation.quantity());
+        final var totalCost = newShares.multiply(unitCost);
 
         if(isGreaterThanOrEqual(taxExemptThreshold, totalCost)){
             return false;

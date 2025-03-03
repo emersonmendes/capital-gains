@@ -10,7 +10,7 @@ public class ConfigLoader {
 
     public ConfigLoader(String fileName) {
         bundle = ResourceBundle.getBundle(fileName);
-        Objects.requireNonNull(bundle, "Could not find " + fileName + ".");;
+        Objects.requireNonNull(bundle, "Could not find " + fileName);;
     }
 
     public String getProp(String key) {

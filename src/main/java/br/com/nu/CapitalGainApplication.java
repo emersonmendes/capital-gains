@@ -12,8 +12,7 @@ public class CapitalGainApplication {
         final var config = new ConfigLoader("config");
         final var shareOperationProcessorFactory = new ShareOperationProcessorFactory(config);
         final var shareOperationService = new ShareOperationService(shareOperationProcessorFactory);
-        final var jsonMapper = new JsonMapper();
-        final var shareOperationConsole = new ShareOperationConsole(shareOperationService, jsonMapper);
+        final var shareOperationConsole = new ShareOperationConsole(shareOperationService, new JsonMapper());
         final var stdout = shareOperationConsole.start(args);
         System.out.println(stdout);
     }

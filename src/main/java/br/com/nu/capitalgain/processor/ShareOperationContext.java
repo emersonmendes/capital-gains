@@ -10,7 +10,7 @@ public class ShareOperationContext {
     private BigDecimal totalShares;
     private BigDecimal loss;
 
-    public ShareOperationContext(final ShareOperation firstOperation) {
+    public ShareOperationContext(ShareOperation firstOperation) {
         this.weightedAvgCost = firstOperation.unitCost();
         this.totalShares = BigDecimal.valueOf(firstOperation.quantity());
         this.loss = BigDecimal.ZERO;

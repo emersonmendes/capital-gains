@@ -6,9 +6,7 @@ import java.util.Objects;
 
 public record OperationTax(BigDecimal tax) {
 
-    public static OperationTax of(
-        BigDecimal tax
-    ){
+    public static OperationTax of(BigDecimal tax){
         Objects.requireNonNull(tax, "Tax cannot be null");
         return new OperationTax(applyPattern(tax));
     }

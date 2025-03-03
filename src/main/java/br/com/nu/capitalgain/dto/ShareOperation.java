@@ -34,7 +34,6 @@ public record ShareOperation(
 
         private final OperationType type;
         private BigDecimal unitCost;
-        private long quantity;
 
         public Builder(OperationType type) {
             this.type = type;
@@ -48,12 +47,7 @@ public record ShareOperation(
 
         @Override
         public ShareOperation quantity(long quantity) {
-            this.quantity = quantity;
-            return new ShareOperation(
-                this.type,
-                this.unitCost,
-                this.quantity
-            );
+            return new ShareOperation(this.type, this.unitCost, quantity);
         }
 
     }
