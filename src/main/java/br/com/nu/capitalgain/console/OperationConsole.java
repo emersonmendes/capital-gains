@@ -2,6 +2,7 @@ package br.com.nu.capitalgain.console;
 
 import br.com.nu.capitalgain.console.reader.InputReaderFactory;
 import br.com.nu.capitalgain.dto.Operation;
+import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.service.processor.OperationContext;
 import br.com.nu.capitalgain.service.OperationService;
 import br.com.nu.capitalgain.utils.JsonUtils;
@@ -25,13 +26,25 @@ public class OperationConsole {
     }
 
     public void processJson(String json) {
-        final var operations = JsonUtils.readList(json, new TypeReference<List<Operation>>() {});
+        final var operations = parseOperations(json);
+        final var taxes = calculateTaxes(operations);
+        printTaxes(taxes);
+    }
+
+    private List<OperationTax> calculateTaxes(List<Operation> operations) {
         final var context = new OperationContext(operations.getFirst());
-        final var taxes = operationService.calculate(operations, context);
+        return operationService.calculate(operations, context);
+    }
+
+    private static void printTaxes(List<OperationTax> taxes) {
         synchronized (System.out) {
             JsonUtils.writeValue(System.out, taxes);
             System.out.println();
         }
+    }
+
+    private static List<Operation> parseOperations(String json) {
+        return JsonUtils.readList(json, new TypeReference<>() {});
     }
 
 }
