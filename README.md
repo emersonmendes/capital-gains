@@ -50,7 +50,7 @@
 ``` 
 #### Exemplo 3: Passando operações via arquivo JSON
 ``` shell  
-    docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar < sample/operations.json        
+    docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar < input.txt        
 ```
 
 ## Como executar os testes
