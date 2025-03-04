@@ -1,7 +1,8 @@
 package br.com.nu.capitalgain.console;
 
 import br.com.nu.capitalgain.dto.OperationTax;
-import br.com.nu.capitalgain.service.ShareOperationService;
+import br.com.nu.capitalgain.service.OperationService;
+import br.com.nu.capitalgain.utils.JsonUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ShareOperationConsoleTest {
+public class OperationConsoleTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -38,10 +39,14 @@ public class ShareOperationConsoleTest {
     public void shouldProcessMultiLinesViaArguments() {
 
         // Arrange
-        var shareOperationServiceMock =  mock(ShareOperationService.class);
-        var shareOperationConsole = new ShareOperationConsole(shareOperationServiceMock, new JsonMapper());
+        var operationServiceMock =  mock(OperationService.class);
+        var inputProcessorFactory = new InputReaderFactory();
+        var operationConsole = new OperationConsole(
+             operationServiceMock,
+             inputProcessorFactory
+        );
 
-        when(shareOperationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
+        when(operationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
 
@@ -56,7 +61,7 @@ public class ShareOperationConsoleTest {
         """;
 
         // Act
-        shareOperationConsole.start(line1, line2);
+        operationConsole.start(line1, line2);
 
         // Assert
         Assertions.assertThat(outContent.toString()).isEqualTo("""
@@ -70,13 +75,14 @@ public class ShareOperationConsoleTest {
     public void shouldProcessMultiLinesViaStdin() {
 
         // Arrange
-        var shareOperationServiceMock = mock(ShareOperationService.class);
+        var operationServiceMock = mock(OperationService.class);
 
-        when(shareOperationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
+        when(operationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
 
-        var shareOperationConsole = new ShareOperationConsole(shareOperationServiceMock, new JsonMapper());
+        var inputProcessorFactory = new InputReaderFactory();
+        var operationConsole = new OperationConsole(operationServiceMock, inputProcessorFactory);
 
         String line = """
             [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},
@@ -88,7 +94,7 @@ public class ShareOperationConsoleTest {
         System.setIn(new ByteArrayInputStream(line.getBytes(StandardCharsets.UTF_8)));
 
         // Act
-        shareOperationConsole.start();
+        operationConsole.start();
 
         // Assert
         Assertions.assertThat(outContent.toString()).isEqualTo("""

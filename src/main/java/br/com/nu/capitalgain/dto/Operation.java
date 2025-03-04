@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public record ShareOperation(
+public record Operation(
     @JsonProperty("operation")
     OperationType type,
     @JsonProperty("unit-cost")
@@ -13,7 +13,7 @@ public record ShareOperation(
     long quantity
 ) {
 
-    public ShareOperation {
+    public Operation {
         Objects.requireNonNull(type, "Operation is required!");
         Objects.requireNonNull(unitCost, "Unit cost is required!");
     }
@@ -27,7 +27,7 @@ public record ShareOperation(
     }
 
     public interface UnitCostStep {
-        ShareOperation quantity(long quantity);
+        Operation quantity(long quantity);
     }
 
     private static class Builder implements OperationStep, UnitCostStep {
@@ -46,8 +46,8 @@ public record ShareOperation(
         }
 
         @Override
-        public ShareOperation quantity(long quantity) {
-            return new ShareOperation(this.type, this.unitCost, quantity);
+        public Operation quantity(long quantity) {
+            return new Operation(this.type, this.unitCost, quantity);
         }
 
     }

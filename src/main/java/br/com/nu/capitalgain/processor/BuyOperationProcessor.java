@@ -1,16 +1,16 @@
 package br.com.nu.capitalgain.processor;
 
 import br.com.nu.capitalgain.dto.OperationTax;
-import br.com.nu.capitalgain.dto.ShareOperation;
+import br.com.nu.capitalgain.dto.Operation;
 
 import java.math.BigDecimal;
 
 import static java.math.RoundingMode.UP;
 
-public class BuyShareOperationProcessor implements ShareOperationProcessor {
+public class BuyOperationProcessor implements OperationProcessor {
 
     @Override
-    public OperationTax process(ShareOperation operation, ShareOperationContext context) {
+    public OperationTax process(Operation operation, OperationContext context) {
 
         final var totalShares = context.getTotalShares();
         final var newShares = BigDecimal.valueOf(operation.quantity());

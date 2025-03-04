@@ -3,7 +3,7 @@ package br.com.nu.capitalgain.processor;
 import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.OperationType;
-import br.com.nu.capitalgain.dto.ShareOperation;
+import br.com.nu.capitalgain.dto.Operation;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SellShareOperationProcessorTest {
+public class SellOperationProcessorTest {
 
     private ConfigLoader configMock;
 
@@ -25,11 +25,11 @@ public class SellShareOperationProcessorTest {
         when(configMock.getBigDecimalProp(eq("tax.exempt.threshold"))).thenReturn(BigDecimal.valueOf(20));
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
 
-        var processor = new SellShareOperationProcessor(configMock);
-        var operation = ShareOperation.operation(OperationType.SELL).unitCost(BigDecimal.valueOf(10000)).quantity(1000);
+        var processor = new SellOperationProcessor(configMock);
+        var operation = Operation.operation(OperationType.SELL).unitCost(BigDecimal.valueOf(10000)).quantity(1000);
 
         // Act
-        var operationTax = processor.process(operation, new ShareOperationContext(operation));
+        var operationTax = processor.process(operation, new OperationContext(operation));
 
         // Assert
         Assertions.assertThat(operationTax).isNotNull();

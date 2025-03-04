@@ -2,26 +2,26 @@ package br.com.nu.capitalgain.processor;
 
 import br.com.nu.capitalgain.config.ConfigLoader;
 import br.com.nu.capitalgain.dto.OperationTax;
-import br.com.nu.capitalgain.dto.ShareOperation;
+import br.com.nu.capitalgain.dto.Operation;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 import static java.math.RoundingMode.UP;
 
-public class SellShareOperationProcessor implements ShareOperationProcessor {
+public class SellOperationProcessor implements OperationProcessor {
 
     private final BigDecimal taxExemptThreshold;
     private final BigDecimal taxRate;
 
-    public SellShareOperationProcessor(ConfigLoader config){
+    public SellOperationProcessor(ConfigLoader config){
         Objects.requireNonNull(config, "ConfigLoader cannot be null");
         taxExemptThreshold = config.getBigDecimalProp("tax.exempt.threshold");
         taxRate = config.getBigDecimalProp("tax.rate");
     }
 
     @Override
-    public OperationTax process(ShareOperation operation, ShareOperationContext context) {
+    public OperationTax process(Operation operation, OperationContext context) {
 
         final var weightedAvgCost = context.getWeightedAvgCost();
         final var newShares = BigDecimal.valueOf(operation.quantity());
@@ -57,7 +57,7 @@ public class SellShareOperationProcessor implements ShareOperationProcessor {
         return value.signum() < 0;
     }
 
-    private boolean isTaxable(ShareOperation operation, BigDecimal weightedAvgCost) {
+    private boolean isTaxable(Operation operation, BigDecimal weightedAvgCost) {
 
         final var unitCost = operation.unitCost();
         final var newShares = BigDecimal.valueOf(operation.quantity());

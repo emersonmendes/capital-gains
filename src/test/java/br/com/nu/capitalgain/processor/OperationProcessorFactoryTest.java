@@ -11,7 +11,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ShareOperationProcessorFactoryTest {
+public class OperationProcessorFactoryTest {
 
     @Test
     public void shouldThrowIllegalArgumentExceptionWhenProcessorDoesNotExist() {
@@ -21,11 +21,11 @@ public class ShareOperationProcessorFactoryTest {
         when(configMock.getBigDecimalProp(eq("tax.exempt.threshold"))).thenReturn(BigDecimal.valueOf(20000));
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
 
-        var shareOperationProcessorFactory = new ShareOperationProcessorFactory(configMock);
+        var operationProcessorFactory = new OperationProcessorFactory(configMock);
 
         // Act
         var exception = assertThrows(IllegalArgumentException.class, () -> {
-            shareOperationProcessorFactory.getInstance(null);
+            operationProcessorFactory.createProcessor(null);
         });
 
         // Assert
