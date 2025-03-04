@@ -2,8 +2,8 @@ package br.com.nu.capitalgain.service;
 
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.Operation;
-import br.com.nu.capitalgain.processor.OperationContext;
-import br.com.nu.capitalgain.processor.OperationProcessorFactory;
+import br.com.nu.capitalgain.service.processor.OperationContext;
+import br.com.nu.capitalgain.service.processor.OperationProcessorFactory;
 
 import java.util.List;
 import java.util.Objects;

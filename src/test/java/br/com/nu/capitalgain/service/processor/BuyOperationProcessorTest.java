@@ -1,8 +1,10 @@
-package br.com.nu.capitalgain.processor;
+package br.com.nu.capitalgain.service.processor;
 
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.dto.OperationType;
 import br.com.nu.capitalgain.dto.Operation;
+import br.com.nu.capitalgain.service.processor.BuyOperationProcessor;
+import br.com.nu.capitalgain.service.processor.OperationContext;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

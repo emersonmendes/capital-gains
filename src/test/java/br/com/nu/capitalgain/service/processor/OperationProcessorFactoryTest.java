@@ -1,6 +1,7 @@
-package br.com.nu.capitalgain.processor;
+package br.com.nu.capitalgain.service.processor;
 
 import br.com.nu.capitalgain.config.ConfigLoader;
+import br.com.nu.capitalgain.service.processor.OperationProcessorFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

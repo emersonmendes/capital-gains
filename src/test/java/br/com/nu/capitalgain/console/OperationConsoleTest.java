@@ -1,8 +1,8 @@
 package br.com.nu.capitalgain.console;
 
+import br.com.nu.capitalgain.console.reader.InputReaderFactory;
 import br.com.nu.capitalgain.dto.OperationTax;
 import br.com.nu.capitalgain.service.OperationService;
-import br.com.nu.capitalgain.utils.JsonUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -40,11 +40,8 @@ public class OperationConsoleTest {
 
         // Arrange
         var operationServiceMock =  mock(OperationService.class);
-        var inputProcessorFactory = new InputReaderFactory();
-        var operationConsole = new OperationConsole(
-             operationServiceMock,
-             inputProcessorFactory
-        );
+        var inputReaderFactory = new InputReaderFactory();
+        var operationConsole = new OperationConsole(operationServiceMock, inputReaderFactory);
 
         when(operationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
@@ -81,8 +78,8 @@ public class OperationConsoleTest {
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
 
-        var inputProcessorFactory = new InputReaderFactory();
-        var operationConsole = new OperationConsole(operationServiceMock, inputProcessorFactory);
+        var inputReaderFactory = new InputReaderFactory();
+        var operationConsole = new OperationConsole(operationServiceMock, inputReaderFactory);
 
         String line = """
             [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},

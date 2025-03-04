@@ -1,4 +1,6 @@
-    package br.com.nu.capitalgain.console;
+    package br.com.nu.capitalgain.console.reader;
+
+    import br.com.nu.capitalgain.console.OperationConsole;
 
     import java.io.BufferedReader;
     import java.io.IOException;

@@ -1,4 +1,4 @@
-package br.com.nu.capitalgain.processor;
+package br.com.nu.capitalgain.service.processor;
 
 import br.com.nu.capitalgain.dto.Operation;
 

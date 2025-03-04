@@ -1,7 +1,8 @@
 package br.com.nu.capitalgain.console;
 
+import br.com.nu.capitalgain.console.reader.InputReaderFactory;
 import br.com.nu.capitalgain.dto.Operation;
-import br.com.nu.capitalgain.processor.OperationContext;
+import br.com.nu.capitalgain.service.processor.OperationContext;
 import br.com.nu.capitalgain.service.OperationService;
 import br.com.nu.capitalgain.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,8 +23,8 @@ public class OperationConsole {
     }
 
     public void start(String... args) {
-        final var processor = inputReaderFactory.createReader(this, args);
-        processor.read();
+        final var reader = inputReaderFactory.createReader(this, args);
+        reader.read();
     }
 
     public void processJson(String json) {
