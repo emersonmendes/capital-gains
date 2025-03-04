@@ -32,8 +32,8 @@
                     jsonBuffer.append(currentChar);
                     if (currentChar == ']') {
                         final var json = jsonBuffer.toString();
-                        runAsync(() -> console.processJson(json), executor);
                         jsonBuffer.setLength(0);
+                        runAsync(() -> console.processJson(json), executor);
                     }
                 }
             } catch (IOException e) {
