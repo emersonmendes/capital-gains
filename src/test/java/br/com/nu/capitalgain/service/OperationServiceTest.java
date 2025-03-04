@@ -312,7 +312,8 @@ public class OperationServiceTest {
         operationService.calculate(operations, context);
 
         // Assert
-        Assertions.assertThat(context.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(15.0));
+        Assertions.assertThat(context.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(15.00));
+        Assertions.assertThat(context.getTotalShares()).isEqualTo(BigDecimal.valueOf(5));
 
     }
 
