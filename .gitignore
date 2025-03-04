@@ -12,7 +12,6 @@ target/
 *.iml
 *.ipr
 **/.idea/**
-sample/operations.json
 
 ### Eclipse ###
 .apt_generated
@@ -38,3 +37,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Custom
+sample/operations.json
+dependency-reduced-pom.xml
