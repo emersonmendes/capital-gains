@@ -16,7 +16,7 @@ public class OperationProcessorFactory {
     }
 
     public OperationProcessor createProcessor(OperationType type){
-        var processor = processors.get(type);
+        final var processor = processors.get(type);
         if(processor == null){
             throw new IllegalArgumentException("Type not found for operation: " + type);
         }

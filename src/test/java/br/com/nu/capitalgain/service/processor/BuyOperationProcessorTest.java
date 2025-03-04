@@ -16,11 +16,11 @@ public class BuyOperationProcessorTest {
     public void shouldReturnZeroTaxWhenDoABuyOperation() {
 
         // Arrange
-        var processor = new BuyOperationProcessor();
-        var operation = Operation.operation(OperationType.BUY).unitCost(BigDecimal.ONE).quantity(1000);
+        final var processor = new BuyOperationProcessor();
+        final var operation = Operation.operation(OperationType.BUY).unitCost(BigDecimal.ONE).quantity(1000);
 
         // Act
-        var operationTax = processor.process(operation, new OperationContext(operation));
+        final var operationTax = processor.process(operation, new OperationContext(operation));
 
         // Assert
         Assertions.assertThat(operationTax).isNotNull();
@@ -33,11 +33,11 @@ public class BuyOperationProcessorTest {
     public void shouldRecalculateWeightedAveragePriceWhenDoBuyOperation() {
 
         // Arrange
-        var operation1 = Operation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(70)).quantity(7000);
-        var operation2 = Operation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(140)).quantity(2000);
+        final var operation1 = Operation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(70)).quantity(7000);
+        final var operation2 = Operation.operation(OperationType.BUY).unitCost(BigDecimal.valueOf(140)).quantity(2000);
 
-        var processor = new BuyOperationProcessor();
-        var operationContext = new OperationContext(operation1);
+        final var processor = new BuyOperationProcessor();
+        final var operationContext = new OperationContext(operation1);
 
         // Act
         processor.process(operation1, operationContext);

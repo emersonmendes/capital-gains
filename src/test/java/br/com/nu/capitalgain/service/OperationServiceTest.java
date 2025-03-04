@@ -320,15 +320,15 @@ public class OperationServiceTest {
     public void shouldOffsetAccumulatedLossAgainstMultipleFutureCapitalGainsUntilFullyDeducted() {
 
         // Arrange
-        var operationService = new OperationService(operationProcessorFactory);
-        var operations = List.of(
+        final var operationService = new OperationService(operationProcessorFactory);
+        final var operations = List.of(
             Operation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(10000),
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(05.00)).quantity(5000),
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(1500),
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(1000)
         );
 
-        var context = new OperationContext(operations.getFirst());
+        final var context = new OperationContext(operations.getFirst());
 
         // Act
         operationService.calculate(operations, context);

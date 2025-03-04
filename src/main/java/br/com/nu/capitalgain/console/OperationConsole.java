@@ -14,10 +14,7 @@ public class OperationConsole {
     private final OperationService operationService;
     private final InputReaderFactory inputReaderFactory;
 
-    public OperationConsole(
-        OperationService operationService,
-        InputReaderFactory inputReaderFactory
-    ) {
+    public OperationConsole(OperationService operationService, InputReaderFactory inputReaderFactory) {
         this.operationService = operationService;
         this.inputReaderFactory = inputReaderFactory;
     }

@@ -15,7 +15,7 @@ public class BuyOperationProcessor implements OperationProcessor {
         final var totalShares = context.getTotalShares();
         final var newShares = BigDecimal.valueOf(operation.quantity());
 
-        var newWeightedAvgCost = totalShares
+        final var newWeightedAvgCost = totalShares
             .multiply(context.getWeightedAvgCost())
             .add(newShares.multiply(operation.unitCost()))
             .divide(totalShares.add(newShares), UP);

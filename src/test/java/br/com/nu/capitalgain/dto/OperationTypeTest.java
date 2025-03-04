@@ -11,7 +11,7 @@ public class OperationTypeTest {
     public void shouldThrowsIllegalArgumentExceptionWhenTryToGetAnUnknownType(){
 
         // Act
-        var exception = assertThrows(IllegalArgumentException.class, () -> {
+        final var exception = assertThrows(IllegalArgumentException.class, () -> {
             OperationType.fromString("exchange");
         });
 

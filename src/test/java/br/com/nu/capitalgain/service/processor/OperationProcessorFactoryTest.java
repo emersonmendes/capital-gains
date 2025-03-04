@@ -18,11 +18,11 @@ public class OperationProcessorFactoryTest {
     public void shouldThrowIllegalArgumentExceptionWhenProcessorDoesNotExist() {
 
         // Arrange
-        var configMock = mock(ConfigLoader.class);
+        final var configMock = mock(ConfigLoader.class);
         when(configMock.getBigDecimalProp(eq("tax.exempt.threshold"))).thenReturn(BigDecimal.valueOf(20000));
         when(configMock.getBigDecimalProp(eq("tax.rate"))).thenReturn(BigDecimal.valueOf(20));
 
-        var operationProcessorFactory = new OperationProcessorFactory(configMock);
+        final var operationProcessorFactory = new OperationProcessorFactory(configMock);
 
         // Act
         var exception = assertThrows(IllegalArgumentException.class, () -> {

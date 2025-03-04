@@ -49,7 +49,7 @@ public class SellOperationProcessor implements OperationProcessor {
     }
 
     private OperationTax applyTax(BigDecimal capitalGain) {
-        var tax = capitalGain.multiply(taxRate).divide(BigDecimal.valueOf(100), 2, UP);
+        final var tax = capitalGain.multiply(taxRate).divide(BigDecimal.valueOf(100), 2, UP);
         return OperationTax.of(tax);
     }
 

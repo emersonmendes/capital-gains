@@ -72,14 +72,14 @@ public class OperationConsoleTest {
     public void shouldProcessMultiLinesViaStdin() {
 
         // Arrange
-        var operationServiceMock = mock(OperationService.class);
+        final var operationServiceMock = mock(OperationService.class);
 
         when(operationServiceMock.calculate(anyList(), any())).thenReturn(List.of(
             OperationTax.ofZero(), OperationTax.of(BigDecimal.valueOf(10_000.00))
         ));
 
-        var inputReaderFactory = new InputReaderFactory();
-        var operationConsole = new OperationConsole(operationServiceMock, inputReaderFactory);
+        final var inputReaderFactory = new InputReaderFactory();
+        final var operationConsole = new OperationConsole(operationServiceMock, inputReaderFactory);
 
         String line = """
             [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},

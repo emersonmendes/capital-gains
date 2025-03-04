@@ -14,8 +14,8 @@ public class ConfigLoaderTest {
         final var config = new ConfigLoader("config");
 
         // Act
-        var taxExemptThreshold = config.getBigDecimalProp("tax.exempt.threshold");
-        var taxRate = config.getProp("tax.rate");
+        final var taxExemptThreshold = config.getBigDecimalProp("tax.exempt.threshold");
+        final var taxRate = config.getProp("tax.rate");
 
         // Assert
         Assertions.assertThat(taxExemptThreshold).isEqualTo(BigDecimal.valueOf(20000.0));
