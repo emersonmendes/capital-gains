@@ -173,7 +173,7 @@ public class OperationServiceTest {
     }
 
     @Test // Caso #6
-    public void shouldValidateCase6() {
+    public void shouldDeductLossesBeforeApplyingTaxOnCapitalGains() {
 
         // Arrange
         var operationService = new OperationService(operationProcessorFactory);
@@ -203,7 +203,7 @@ public class OperationServiceTest {
     }
 
     @Test // Caso #7
-    public void shouldValidateCase7() {
+    public void shouldRecalculateWeightedAverageConsideringAllPreviousBuysUntilCurrentSale() {
 
         // Arrange
         var operationService = new OperationService(operationProcessorFactory);
@@ -241,7 +241,7 @@ public class OperationServiceTest {
     }
 
     @Test // Caso #8
-    public void shouldValidateCase8() {
+    public void shouldApplyCapitalGainsTaxForMultipleBuyAndSellOperations() {
 
         // Arrange
         var operationService = new OperationService(operationProcessorFactory);
