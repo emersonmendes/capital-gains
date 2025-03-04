@@ -63,7 +63,7 @@ public class OperationServiceTest {
     }
 
     @Test // Caso #2
-    public void shouldPayTaxesWhenSellingPriceIsGreaterThanWeightedAvgCost() {
+    public void shouldApplyTaxWhenSellingAboveWeightedAverageCost() {
 
         // Arrange
         var operationService = new OperationService(operationProcessorFactory);
@@ -90,7 +90,7 @@ public class OperationServiceTest {
     }
 
     @Test // Caso #3
-    public void shouldApplyTaxesAfterDeductingAccumulatedLoss() {
+    public void shouldDeductAccumulatedLossBeforeApplyingTax() {
 
         // Arrange
         var operationService = new OperationService(operationProcessorFactory);
@@ -117,7 +117,7 @@ public class OperationServiceTest {
     }
 
     @Test // Caso #4
-    public void shouldProcessOperationWithNoNetLossOrCapitalGain() {
+    public void shouldProcessOperationsWithoutApplyingTaxWhenNoLossOrGain() {
 
         // Arrange
         var operationService = new OperationService(operationProcessorFactory);
