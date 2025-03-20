@@ -1,59 +1,59 @@
-# Projeto Nubank - Capital Gains
+# Capital Gains - Study Project
 
-## Sobre as decisões técnicas
+## About the Technical Decisions
   
-- Utilização de Java (21)
-  - Escolhido por ser a linguagem na qual tenho mais experiência.
-  - Benefícios da versão 21: suporte a Virtual Threads, melhorias de desempenho e maior maturidade da linguagem.
-- Uso do Java Streams API para manipulação eficiente de dados.
-- Uso de BufferedReader para melhorar a performance na leitura de entrada
-  - Reduz chamadas de I/O ao ler grandes volumes de dados de forma eficiente.
-- Implementação de princípios SOLID para melhor organização e manutenção do código.
-- Uso de containers Docker
-  - Facilita a execução do projeto sem necessidade de configurações adicionais na máquina.
-  - Permite isolamento do ambiente e consistência entre execuções.
+- Java (21)
+  - Chosen because it's the language I have the most experience with.
+  - Benefits of version 21: support for Virtual Threads, performance improvements, and greater language maturity.
+- Java Streams API for efficient data handling.
+- BufferedReader used to improve input reading performance:
+  - Reduces I/O calls when reading large volumes of data.
+- Implementation of SOLID principles for better code organization and maintenance.
+- Docker Containers
+  - Facilitates running the project without requiring additional setup on the machine.
+  - Provides environment isolation and consistency between executions.
 
-## Sobre as bibliotecas utilizadas no projeto
+## Libraries Used
 
 - Jackson
-  - Para serialização e desserialização de objetos JSON, facilitando a conversão entre objetos Java e JSON.
+  - For JSON object serialization and deserialization, making it easy to convert between Java objects and JSON.
 - JUnit
-  - Para a criação e execução de testes unitários, garantindo a qualidade e a funcionalidade do código.
+  - For creating and running unit tests, ensuring code quality and functionality.
 - AssertJ
-  - Para fornecer uma API fluente e legível para asserções em testes, tornando a verificação de resultados mais intuitiva.
+  - Provides a fluent and readable API for assertions in tests, making result verification more intuitive.
 - Mockito
-  - Para mockar dependências em testes, permitindo a simulação do comportamento de objetos e facilitando a testabilidade de componentes isolados.
+  - For mocking dependencies in tests, allowing the simulation of object behavior and facilitating isolated component testing.
 
-## Como executar o projeto
+## How to Run the Project
 
-    Obs: É apenas necessário a instalação do Docker. 
-    Foi utilizado nesse projeto a versão 28.0.1
+    Note: Only Docker installation is required.
+    Docker version used in this project: 28.0.1
 
-### 1 - Fazer o build
+### 1 - Build the Project
 ``` shell
     docker compose run --rm capital-gains-maven mvn clean install
 ```
 
-### 2 - Executar
+### 2 - Run the Project
 
-#### Exemplo 1: Passando operações inline
+#### Example 1: Passing operations inline
 ``` shell  
     docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar \
     '[{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]' \
     '[{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]'
 ```  
-#### Exemplo 2: Passando operações inline com múltiplas linhas
+#### Example 2: Passing operations inline with multiple lines
 ``` shell  
     docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar \
     '[{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]
     [{"operation":"buy", "unit-cost":10.00, "quantity": 10000}]'
 ``` 
-#### Exemplo 3: Passando operações via arquivo JSON
+#### Example 3: Passing operations from a JSON file
 ``` shell  
     docker compose run --rm -T capital-gains-app java -jar target/capital-gains.jar < input.txt        
 ```
 
-## Como executar os testes
+## How to Run the Tests
 ``` shell
     docker compose run --rm capital-gains-maven mvn test
 ```
