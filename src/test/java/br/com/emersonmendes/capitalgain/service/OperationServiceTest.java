@@ -47,10 +47,8 @@ public class OperationServiceTest {
             Operation.operation(BUY).unitCost(BigDecimal.valueOf(15.00)).quantity(100)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -74,10 +72,8 @@ public class OperationServiceTest {
             Operation.operation(BUY).unitCost(BigDecimal.valueOf(5.00)).quantity(5000)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -101,10 +97,8 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(3000)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -128,10 +122,8 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(15.00)).quantity(10000)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -156,10 +148,8 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(5000)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -186,10 +176,9 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(25.00)).quantity(1000)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
+
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
         Assertions.assertThat(taxes).containsExactly(
@@ -220,10 +209,8 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(30.00)).quantity(650)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -253,10 +240,8 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(50.00)).quantity(10000)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -281,10 +266,8 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(200.00)).quantity(1000)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        var taxes = operationService.calculate(operations, context);
+        var taxes = operationService.calculate(operations);
 
         // Assert
         Assertions.assertThat(taxes).hasSameSizeAs(operations);
@@ -306,14 +289,16 @@ public class OperationServiceTest {
             Operation.operation(BUY).unitCost(BigDecimal.valueOf(10.00)).quantity(5)
         );
 
-        var context = new OperationContext(operations.getFirst());
-
         // Act
-        operationService.calculate(operations, context);
+        List<OperationTax> taxes = operationService.calculate(operations);
 
         // Assert
-        Assertions.assertThat(context.getWeightedAvgCost()).isEqualTo(BigDecimal.valueOf(15.00));
-        Assertions.assertThat(context.getTotalShares()).isEqualTo(BigDecimal.valueOf(5));
+        Assertions.assertThat(taxes).hasSameSizeAs(operations);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO)
+        );
 
     }
 
@@ -329,13 +314,17 @@ public class OperationServiceTest {
             Operation.operation(SELL).unitCost(BigDecimal.valueOf(20.00)).quantity(1000)
         );
 
-        final var context = new OperationContext(operations.getFirst());
-
         // Act
-        operationService.calculate(operations, context);
+        List<OperationTax> taxes = operationService.calculate(operations);
 
         // Assert
-        Assertions.assertThat(context.getLoss()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(taxes).hasSameSizeAs(operations);
+        Assertions.assertThat(taxes).containsExactly(
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO),
+            OperationTax.of(BigDecimal.ZERO)
+        );
 
     }
 

@@ -12,8 +12,8 @@ public class CapitalGainApplication {
         final var config = new ConfigLoader("config");
         final var operationProcessorFactory = new OperationProcessorFactory(config);
         final var operationService = new OperationService(operationProcessorFactory);
-        final var inputReaderFactory = new InputReaderFactory();
-        final var operationConsole = new OperationConsole(operationService, inputReaderFactory);
+        final var inputReaderFactory = new InputReaderFactory(operationService);
+        final var operationConsole = new OperationConsole(inputReaderFactory);
         operationConsole.start(args);
     }
 
