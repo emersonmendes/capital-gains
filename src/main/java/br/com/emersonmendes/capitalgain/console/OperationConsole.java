@@ -9,18 +9,35 @@ import br.com.emersonmendes.capitalgain.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 public class OperationConsole {
 
     private final InputReaderFactory inputReaderFactory;
+    private final OperationService operationService;
 
-    public OperationConsole(InputReaderFactory inputReaderFactory) {
+    public OperationConsole(
+        OperationService operationService,
+        InputReaderFactory inputReaderFactory
+    ) {
+        this.operationService = operationService;
         this.inputReaderFactory = inputReaderFactory;
     }
 
     public void start(String... args) {
         final var reader = inputReaderFactory.createReader(args);
-        reader.read(OperationConsole::printTaxes);
+        try (var executor = newVirtualThreadPerTaskExecutor()) {
+            reader.read(operations -> calculate(operations, executor));
+        }
+    }
+
+    private void calculate(List<Operation> operations, Executor executor) {
+        supplyAsync(() -> operationService.calculate(operations), executor)
+            .thenAcceptAsync(OperationConsole::printTaxes, executor);
     }
 
     private static void printTaxes(List<OperationTax> taxes) {

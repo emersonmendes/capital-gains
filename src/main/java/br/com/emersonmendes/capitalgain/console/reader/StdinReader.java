@@ -19,21 +19,11 @@
 
     public class StdinReader implements InputReader {
 
-        private final OperationService operationService;
-
-        public StdinReader(OperationService operationService) {
-            this.operationService = operationService;
-        }
-
         @Override
-        public void read(Consumer<List<OperationTax>> consumer) {
-            try (
-                final var reader = new BufferedReader(new InputStreamReader(System.in, UTF_8));
-                final var executor = newVirtualThreadPerTaskExecutor();
-            ) {
+        public void read(Consumer<List<Operation>> consumer) {
+            try (final var reader = new BufferedReader(new InputStreamReader(System.in, UTF_8))) {
                 final var jsonBuffer = new StringBuilder();
                 int charCode;
-
                 while ((charCode = reader.read()) != -1) {
                     final var currentChar = (char) charCode;
                     jsonBuffer.append(currentChar);
@@ -41,8 +31,7 @@
                         final var json = jsonBuffer.toString();
                         jsonBuffer.setLength(0);
                         List<Operation> operations = parseOperations(json);
-                        List<OperationTax> taxes = supplyAsync(() -> operationService.calculate(operations), executor).join();
-                        consumer.accept(taxes);
+                        consumer.accept(operations);
                     }
                 }
             } catch (IOException e) {
