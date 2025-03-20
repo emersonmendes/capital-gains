@@ -4,8 +4,6 @@ import br.com.emersonmendes.capitalgain.dto.OperationTax;
 import br.com.emersonmendes.capitalgain.dto.Operation;
 import br.com.emersonmendes.capitalgain.service.processor.OperationContext;
 import br.com.emersonmendes.capitalgain.service.processor.OperationProcessorFactory;
-import br.com.emersonmendes.capitalgain.utils.JsonUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 import java.util.Objects;

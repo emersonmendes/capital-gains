@@ -3,14 +3,11 @@ package br.com.emersonmendes.capitalgain.console;
 import br.com.emersonmendes.capitalgain.console.reader.InputReaderFactory;
 import br.com.emersonmendes.capitalgain.dto.Operation;
 import br.com.emersonmendes.capitalgain.dto.OperationTax;
-import br.com.emersonmendes.capitalgain.service.processor.OperationContext;
 import br.com.emersonmendes.capitalgain.service.OperationService;
 import br.com.emersonmendes.capitalgain.utils.JsonUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;

@@ -4,7 +4,6 @@ package br.com.emersonmendes.capitalgain.service;
 import br.com.emersonmendes.capitalgain.config.ConfigLoader;
 import br.com.emersonmendes.capitalgain.dto.OperationTax;
 import br.com.emersonmendes.capitalgain.dto.Operation;
-import br.com.emersonmendes.capitalgain.service.processor.OperationContext;
 import br.com.emersonmendes.capitalgain.service.processor.OperationProcessorFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -111,7 +110,7 @@ public class OperationServiceTest {
     }
 
     @Test // Caso #4
-    public void shouldProcessOperationsWithoutApplyingTaxWhenNoLossOrGain() {
+    public void shouldCalculateOperationsWithoutApplyingTaxWhenNoLossOrGain() {
 
         // Arrange
         var operationService = new OperationService(operationProcessorFactory);
